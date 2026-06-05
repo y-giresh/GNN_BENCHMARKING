@@ -1,9 +1,4 @@
 
-Task: graph
-Model: gin
-Dataset: mutag
-Accuracy: 0.7926
-
 Task: node
 Model: gcn
 Dataset: cora
@@ -14,7 +9,57 @@ Model: gat
 Dataset: cora
 Accuracy: 0.7840
 
+Task: node
+Model: graphsage
+Dataset: pubmed
+Accuracy: 0.7660
+
+Task: node
+Model: gin
+Dataset: citeseer
+Accuracy: 0.6310
+
 Task: link
 Model: gcn
 Dataset: cora
-Accuracy: 0.6659
+Accuracy: 0.6749
+
+Task: link
+Model: gat
+Dataset: pubmed
+Accuracy: 0.7524
+
+Task: link
+Model: gat
+Dataset: cora
+Accuracy: 0.6995
+
+Task: link
+Model: graphsage
+Dataset: cora
+Accuracy: 0.6697
+
+Task: link
+Model: gin
+Dataset: cora
+Accuracy: 0.6768
+
+Task: graph
+Model: gcn
+Dataset: mutag
+Accuracy: 0.7447
+
+Task: graph
+Model: gat
+Dataset: mutag
+Accuracy: 0.7553
+
+Task: graph
+Model: graphsage
+Dataset: mutag
+Accuracy: 0.7660
+
+Task: graph
+Model: gin
+Dataset: mutag
+Accuracy: 0.7926

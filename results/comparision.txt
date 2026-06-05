@@ -1,0 +1,26 @@
+NODE CLASSIFICATION
+
+Dataset: Cora
+
+--------------------------------
+
+GCN
+Accuracy: 0.808
+
+GAT
+Accuracy: 0.773
+
+GraphSAGE
+Accuracy: 0.818
+
+GIN
+Accuracy: 0.732
+
+--------------------------------
+
+Ranking
+
+1. GraphSAGE
+2. GCN
+3. GAT
+4. GIN

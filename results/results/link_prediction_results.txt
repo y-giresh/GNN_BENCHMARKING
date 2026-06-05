@@ -1,0 +1,10 @@
+LINK PREDICTION
+
+Dataset:
+Cora
+
+
+GCN
+
+Accuracy:
+0.702

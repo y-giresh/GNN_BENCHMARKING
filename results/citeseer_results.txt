@@ -1,0 +1,16 @@
+Dataset: CiteSeer
+
+GCN:
+0.686
+
+GAT:
+0.663
+
+GraphSAGE:
+0.689
+
+GIN:
+0.549
+
+Winner:
+GraphSAGE

@@ -1,0 +1,12 @@
+Dataset: Cora
+
+Model: GraphSAGE
+
+Train Accuracy:
+1.000
+
+Final Test Accuracy:
+0.818
+
+Remarks:
+Best result on Cora.

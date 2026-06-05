@@ -1,0 +1,12 @@
+Dataset: Cora
+
+Model: GAT
+
+Train Accuracy:
+0.85–0.91
+
+Final Test Accuracy:
+0.773
+
+Remarks:
+Lower than GCN.

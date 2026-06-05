@@ -1,0 +1,12 @@
+Dataset: Cora
+
+Model: GCN
+
+Train Accuracy:
+1.000
+
+Final Test Accuracy:
+0.808
+
+Remarks:
+Strong baseline.

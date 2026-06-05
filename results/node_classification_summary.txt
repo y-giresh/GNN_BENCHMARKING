@@ -1,0 +1,30 @@
+NODE CLASSIFICATION SUMMARY
+
+Cora
+GCN: 0.808
+GAT: 0.773
+GraphSAGE: 0.818
+GIN: 0.732
+
+Winner:
+GraphSAGE
+
+
+CiteSeer
+GCN: 0.686
+GAT: 0.663
+GraphSAGE: 0.689
+GIN: 0.549
+
+Winner:
+GraphSAGE
+
+
+PubMed
+GCN: 0.789
+GAT: 0.763
+GraphSAGE: 0.774
+GIN: 0.753
+
+Winner:
+GCN

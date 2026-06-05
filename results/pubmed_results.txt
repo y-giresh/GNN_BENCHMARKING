@@ -1,0 +1,16 @@
+Dataset: PubMed
+
+GCN:
+0.789
+
+GAT:
+0.763
+
+GraphSAGE:
+0.774
+
+GIN:
+0.753
+
+Winner:
+GCN

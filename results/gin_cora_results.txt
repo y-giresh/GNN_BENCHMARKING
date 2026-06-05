@@ -1,0 +1,12 @@
+Dataset: Cora
+
+Model: GIN
+
+Train Accuracy:
+1.000
+
+Final Test Accuracy:
+0.732
+
+Remarks:
+Better suited later for graph classification.

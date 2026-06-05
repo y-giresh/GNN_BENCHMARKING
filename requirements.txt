@@ -1,0 +1,11 @@
+torch
+torch-geometric
+scikit-learn
+matplotlib
+
+
+
+torch → runs neural networks (GCN, GAT, GraphSAGE, GIN)
+torch-geometric → gives graph datasets + graph layers
+scikit-learn → calculate Accuracy, F1
+matplotlib → draw result graphs

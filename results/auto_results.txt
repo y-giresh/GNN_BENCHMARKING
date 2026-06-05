@@ -1,0 +1,1 @@
+node, gcn, cora, 0.7920

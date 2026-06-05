@@ -53,3 +53,18 @@ Task: node
 Model: gin
 Dataset: cora
 Accuracy: 0.7270
+
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+
+Task: graph
+Model: gcn
+Dataset: mutag
+Accuracy: 0.0000

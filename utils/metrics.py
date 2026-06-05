@@ -1,71 +1,32 @@
 def compare_results():
 
-    input_file = open(
+    file = open(
         "results/auto_results.txt",
         "r"
     )
 
-    lines = input_file.readlines()
+    lines = file.readlines()
 
-    input_file.close()
+    file.close()
 
-    output = open(
+    out = open(
         "results/comparison.txt",
         "w"
     )
 
-    output.write(
-        "BENCHMARK SUMMARY\n\n"
+    out.write(
+        "BENCHMARK COMPARISON\n\n"
     )
 
-    for i in range(
-        len(lines)
-    ):
+    for line in lines:
 
-        line = lines[i].strip()
+        if line.strip():
 
-        if (
-            line.startswith(
-                "Task:"
-            )
-
-            or
-
-            line.startswith(
-                "Model:"
-            )
-
-            or
-
-            line.startswith(
-                "Dataset:"
-            )
-
-            or
-
-            line.startswith(
-                "Accuracy:"
-            )
-
-        ):
-
-            output.write(
+            out.write(
                 line
             )
 
-            output.write(
-                "\n"
-            )
-
-        if line.startswith(
-            "Accuracy:"
-        ):
-
-            output.write(
-                "\n"
-            )
-
-    output.close()
+    out.close()
 
     print()
 

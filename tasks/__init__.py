@@ -1,31 +1,45 @@
 from torch_geometric.datasets import Planetoid
+from torch_geometric.datasets import TUDataset
 
 
-def get_dataset(
-    name
-):
+def get_dataset(dataset_name):
 
-    datasets = {
+    dataset_name = dataset_name.lower()
 
-        "cora": "Cora",
+    if dataset_name == "cora":
 
-        "citeseer": "CiteSeer",
+        return Planetoid(
+            root="data",
+            name="Cora"
+        )
 
-        "pubmed": "PubMed"
 
-    }
+    elif dataset_name == "citeseer":
 
-    dataset = Planetoid(
+        return Planetoid(
+            root="data",
+            name="CiteSeer"
+        )
 
-        root="data",
 
-        name=datasets[
-            name.lower()
-        ]
+    elif dataset_name == "pubmed":
 
-    )
+        return Planetoid(
+            root="data",
+            name="PubMed"
+        )
 
-    return dataset
-from tasks.link_prediction import (
-    load_link_dataset
-)
+
+    elif dataset_name == "mutag":
+
+        return TUDataset(
+            root="data",
+            name="MUTAG"
+        )
+
+
+    else:
+
+        raise ValueError(
+            f"Dataset '{dataset_name}' not supported"
+        )

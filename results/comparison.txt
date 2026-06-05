@@ -1,57 +1,58 @@
-BENCHMARK SUMMARY
+BENCHMARK COMPARISON
 
 Task: node
 Model: gcn
 Dataset: pubmed
 Accuracy: 0.7840
-
 Task: link
 Model: gcn
 Dataset: cora
 Accuracy: 0.7009
-
 Task: link
 Model: gat
 Dataset: cora
 Accuracy: 0.7147
-
 Task: link
 Model: graphsage
 Dataset: cora
 Accuracy: 0.7109
-
 Task: link
 Model: gin
 Dataset: cora
 Accuracy: 0.7209
-
 Task: link
 Model: gat
 Dataset: pubmed
 Accuracy: 0.7450
-
 Task: link
 Model: gat
 Dataset: citeseer
 Accuracy: 0.7077
-
 Task: node
 Model: gcn
 Dataset: cora
 Accuracy: 0.7920
-
 Task: node
 Model: gcn
 Dataset: cora
 Accuracy: 0.7920
-
 Task: node
 Model: gcn
 Dataset: cora
 Accuracy: 0.7920
-
 Task: node
 Model: gin
 Dataset: cora
 Accuracy: 0.7270
-
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+Task: graph
+Model: gcn
+Dataset: mutag
+Accuracy: 0.0000

@@ -164,6 +164,36 @@ elif task == "link":
         test_data
 
     )
+    
+elif task == "graph":
+
+    from tasks.graph_classification import (
+        load_graph_dataset
+    )
+
+    dataset = (
+        load_graph_dataset()
+    )
+
+    print()
+
+    print(
+        "Graph Classification Mode"
+    )
+
+    print()
+
+    print(
+        "Graphs:",
+        len(dataset)
+    )
+
+    print(
+        "Classes:",
+        dataset.num_classes
+    )
+
+    acc = 0
 
 
 else:

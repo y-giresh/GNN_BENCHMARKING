@@ -1,63 +1,86 @@
 # GNN Benchmark Project
 
-A Unified Comparative Study of GCN, GAT, GraphSAGE, and GIN
-for Node Classification, Link Prediction, and Graph Classification
+Benchmarking Graph Neural Network models across different graph learning tasks.
 
-Objective:
-To compare four Graph Neural Network models under the same
-experimental settings and identify which model performs better
-for different graph learning tasks.
+## Models
 
-Models:
 - GCN
 - GAT
 - GraphSAGE
 - GIN
 
-Tasks:
-1. Node Classification
-2. Link Prediction
-3. Graph Classification
+## Tasks
 
+### Node Classification
 Datasets:
-Node Classification:
 - Cora
 - CiteSeer
 - PubMed
 
-Link Prediction:
+### Link Prediction
+Datasets:
 - Cora
 - CiteSeer
 - PubMed
 
-Graph Classification:
+### Graph Classification
+Dataset:
 - MUTAG
-- PROTEINS
-- ENZYMES
-- NCI1
 
-Evaluation Metrics:
-- Accuracy
-- Macro F1
-- Weighted F1
-- ROC AUC
-- Average Precision
-- Training Time
-- Number of Parameters
+## Project Structure
 
-Project Structure:
-models/
-tasks/
-utils/
-data/
+gnn-model-benchmark/
+
+├── data/
+
+├── models/
+
+├── tasks/
+
+├── results/
+
+├── utils/
+
+├── main.py
+
+├── requirements.txt
+
+└── README.md
+
+
+## Run Experiments
+
+Node Classification
+
+```bash
+python main.py node gcn cora
+```
+
+Link Prediction
+
+```bash
+python main.py link gin cora
+```
+
+Graph Classification
+
+```bash
+python main.py graph gcn mutag
+```
+
+## Output
+
+Results are automatically saved inside:
+
 results/
 
-References:
-1. Benchmarking Graph Neural Networks
-2. Classic GNNs are Strong Baselines
-3. A Topical Review of Graph Embedding in GNNs
-4. A Robust Comparative Analysis of GNNs on Link Prediction
+comparison.txt
 
-Author:
-Giresh
-IIIT Manipur
+auto_results.txt
+
+## Current Status
+
+Completed:
+- Node Classification
+- Link Prediction
+- Graph Classification Setup

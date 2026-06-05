@@ -88,6 +88,8 @@ Completed:
 
 ## Result
 
-GCN worked best for node classification because neighborhood aggregation was sufficient.
-GAT performed better in link prediction because attention helps identify important connections.
-GIN performed best in graph classification because it captures graph structure more strongly.
+- GCN worked best for node classification because neighborhood aggregation was sufficient.
+
+- GAT performed better in link prediction because attention helps identify important connections.
+
+- GIN performed best in graph classification because it captures graph structure more strongly.

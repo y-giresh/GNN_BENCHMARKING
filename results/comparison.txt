@@ -1,8 +1,9 @@
+BENCHMARK SUMMARY
+
 Task: node
 Model: gcn
 Dataset: pubmed
 Accuracy: 0.7840
-
 
 Task: link
 Model: gcn
@@ -53,3 +54,4 @@ Task: node
 Model: gin
 Dataset: cora
 Accuracy: 0.7270
+

@@ -11,6 +11,8 @@ from utils.evaluate import evaluate
 
 from utils.save_results import save_result
 
+from utils.metrics import compare_results
+
 
 if len(sys.argv) != 4:
 
@@ -191,3 +193,5 @@ save_result(
     acc
 
 )
+
+compare_results()

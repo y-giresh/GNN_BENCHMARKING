@@ -83,3 +83,23 @@ Task: graph
 Model: graph_gcn
 Dataset: mutag
 Accuracy: 0.7713
+
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+
+Task: link
+Model: gin
+Dataset: cora
+Accuracy: 0.7043
+
+Task: node
+Model: gcn
+Dataset: cora
+Accuracy: 0.7920
+
+Task: graph
+Model: graph_gcn
+Dataset: mutag
+Accuracy: 0.7713

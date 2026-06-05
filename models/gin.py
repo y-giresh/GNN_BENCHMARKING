@@ -5,13 +5,18 @@ from torch.nn import Sequential
 from torch.nn import Linear
 from torch.nn import ReLU
 
-from torch_geometric.nn import GINConv
+from torch_geometric.nn import (
+    GINConv,
+    global_mean_pool
+)
 
 
 torch.manual_seed(42)
 
 
-class GIN(torch.nn.Module):
+class GIN(
+    torch.nn.Module
+):
 
     def __init__(
         self,
@@ -54,6 +59,7 @@ class GIN(torch.nn.Module):
 
         )
 
+
         self.conv1 = GINConv(
             nn1
         )
@@ -62,33 +68,49 @@ class GIN(torch.nn.Module):
             nn2
         )
 
+
     def forward(
+
         self,
-        data
+
+        x,
+
+        edge_index,
+
+        batch=None
+
     ):
 
-        x = data.x
-
-        edge_index = data.edge_index
-
         x = self.conv1(
+
             x,
+
             edge_index
+
         )
 
         x = F.relu(
             x
         )
 
-        x = F.dropout(
+        x = self.conv2(
+
             x,
-            p=0.5,
-            training=self.training
+
+            edge_index
+
         )
 
-        x = self.conv2(
-            x,
-            edge_index
-        )
+
+        if batch is not None:
+
+            x = global_mean_pool(
+
+                x,
+
+                batch
+
+            )
+
 
         return x

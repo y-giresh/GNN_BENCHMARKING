@@ -10,9 +10,23 @@ def evaluate(
 
     with torch.no_grad():
 
-        pred = model(
-            data
-        ).argmax(
+        try:
+
+            pred = model(
+
+                data.x,
+
+                data.edge_index
+
+            )
+
+        except TypeError:
+
+            pred = model(
+                data
+            )
+
+        pred = pred.argmax(
             dim=1
         )
 
@@ -31,6 +45,7 @@ def evaluate(
         ).float().mean()
 
     return acc.item()
+
 
 
 def decode(
@@ -55,6 +70,7 @@ def decode(
     )
 
 
+
 def evaluate_link(
     model,
     test_data
@@ -64,9 +80,21 @@ def evaluate_link(
 
     with torch.no_grad():
 
-        z = model(
-            test_data
-        )
+        try:
+
+            z = model(
+
+                test_data.x,
+
+                test_data.edge_index
+
+            )
+
+        except TypeError:
+
+            z = model(
+                test_data
+            )
 
         out = decode(
 
@@ -100,6 +128,8 @@ def evaluate_link(
 
     return acc.item()
 
+
+
 def evaluate_graph(
 
     model,
@@ -120,7 +150,13 @@ def evaluate_graph(
         for batch in loader:
 
             out = model(
-                batch
+
+                batch.x,
+
+                batch.edge_index,
+
+                batch.batch
+
             )
 
             pred = (

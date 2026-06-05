@@ -2,7 +2,6 @@ from models.gcn import GCN
 from models.gat import GAT
 from models.graphsage import GraphSAGE
 from models.gin import GIN
-from models.graph_gcn import GraphGCN
 
 
 def get_model(
@@ -21,8 +20,6 @@ def get_model(
         "graphsage": GraphSAGE,
 
         "gin": GIN,
-        
-        "graph_gcn": GraphGCN,
 
     }
 

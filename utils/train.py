@@ -17,9 +17,21 @@ def train(
 
         optimizer.zero_grad()
 
-        out = model(
-            data
-        )
+        try:
+
+            out = model(
+
+                data.x,
+
+                data.edge_index
+
+            )
+
+        except TypeError:
+
+            out = model(
+                data
+            )
 
         loss = F.cross_entropy(
 
@@ -74,6 +86,7 @@ def train(
             )
 
 
+
 def decode(
     z,
     edge_index
@@ -96,6 +109,7 @@ def decode(
     )
 
 
+
 def train_link(
     model,
     train_data,
@@ -111,9 +125,21 @@ def train_link(
 
         optimizer.zero_grad()
 
-        z = model(
-            train_data
-        )
+        try:
+
+            z = model(
+
+                train_data.x,
+
+                train_data.edge_index
+
+            )
+
+        except TypeError:
+
+            z = model(
+                train_data
+            )
 
         pos = decode(
 
@@ -176,6 +202,9 @@ def train_link(
                 f" | Loss {loss:.4f}"
 
             )
+
+
+
 def train_graph(
 
     model,
@@ -198,13 +227,18 @@ def train_graph(
 
         total_loss = 0
 
-
         for batch in loader:
 
             optimizer.zero_grad()
 
             out = model(
-                batch
+
+                batch.x,
+
+                batch.edge_index,
+
+                batch.batch
+
             )
 
             loss = F.cross_entropy(
@@ -224,7 +258,6 @@ def train_graph(
                 loss.item()
 
             )
-
 
         if epoch % 10 == 0:
 

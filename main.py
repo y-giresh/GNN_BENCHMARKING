@@ -206,7 +206,7 @@ elif task == "graph":
 
     model = get_model(
 
-        "graph_gcn",
+        model_name,
 
         dataset.num_features,
 

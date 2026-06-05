@@ -34,37 +34,6 @@ model_name = sys.argv[2]
 dataset_name = sys.argv[3]
 
 
-dataset = get_dataset(
-    dataset_name
-)
-
-data = dataset[0]
-
-
-model = get_model(
-
-    model_name,
-
-    dataset.num_features,
-
-    32,
-
-    dataset.num_classes
-
-)
-
-
-optimizer = torch.optim.Adam(
-
-    model.parameters(),
-
-    lr=0.01,
-
-    weight_decay=5e-4
-
-)
-
-
 print()
 
 print(
@@ -83,6 +52,34 @@ print()
 
 
 if task == "node":
+
+    dataset = get_dataset(
+        dataset_name
+    )
+
+    data = dataset[0]
+
+    model = get_model(
+
+        model_name,
+
+        dataset.num_features,
+
+        32,
+
+        dataset.num_classes
+
+    )
+
+    optimizer = torch.optim.Adam(
+
+        model.parameters(),
+
+        lr=0.01,
+
+        weight_decay=5e-4
+
+    )
 
     train(
 
@@ -164,16 +161,29 @@ elif task == "link":
         test_data
 
     )
-    
+
+
 elif task == "graph":
 
     from tasks.graph_classification import (
         load_graph_dataset
     )
 
-    dataset = (
-        load_graph_dataset()
+    from utils.train import (
+        train_graph
     )
+
+    from utils.evaluate import (
+        evaluate_graph
+    )
+
+
+    dataset, loader = (
+
+        load_graph_dataset()
+
+    )
+
 
     print()
 
@@ -193,8 +203,47 @@ elif task == "graph":
         dataset.num_classes
     )
 
-    acc = 0
 
+    model = get_model(
+
+        "graph_gcn",
+
+        dataset.num_features,
+
+        32,
+
+        dataset.num_classes
+
+    )
+
+
+    optimizer = torch.optim.Adam(
+
+        model.parameters(),
+
+        lr=0.01
+
+    )
+
+
+    train_graph(
+
+        model,
+
+        loader,
+
+        optimizer
+
+    )
+
+
+    acc = evaluate_graph(
+
+        model,
+
+        loader
+
+    )
 
 else:
 

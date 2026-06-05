@@ -99,3 +99,60 @@ def evaluate_link(
         ).float().mean()
 
     return acc.item()
+
+def evaluate_graph(
+
+    model,
+
+    loader
+
+):
+
+    model.eval()
+
+    correct = 0
+
+    total = 0
+
+
+    with torch.no_grad():
+
+        for batch in loader:
+
+            out = model(
+                batch
+            )
+
+            pred = (
+
+                out.argmax(
+                    dim=1
+                )
+
+            )
+
+            correct += (
+
+                pred
+                ==
+                batch.y
+
+            ).sum().item()
+
+            total += (
+
+                batch.y.size(
+                    0
+                )
+
+            )
+
+    return (
+
+        correct
+
+        /
+
+        total
+
+    )

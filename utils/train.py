@@ -176,3 +176,64 @@ def train_link(
                 f" | Loss {loss:.4f}"
 
             )
+def train_graph(
+
+    model,
+
+    loader,
+
+    optimizer,
+
+    epochs=50
+
+):
+
+    model.train()
+
+    for epoch in range(
+
+        epochs
+
+    ):
+
+        total_loss = 0
+
+
+        for batch in loader:
+
+            optimizer.zero_grad()
+
+            out = model(
+                batch
+            )
+
+            loss = F.cross_entropy(
+
+                out,
+
+                batch.y
+
+            )
+
+            loss.backward()
+
+            optimizer.step()
+
+            total_loss += (
+
+                loss.item()
+
+            )
+
+
+        if epoch % 10 == 0:
+
+            print(
+
+                f"Epoch {epoch}"
+
+                f" | Loss "
+
+                f"{total_loss:.4f}"
+
+            )

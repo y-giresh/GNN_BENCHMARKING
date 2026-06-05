@@ -56,3 +56,15 @@ Task: graph
 Model: gcn
 Dataset: mutag
 Accuracy: 0.0000
+Task: graph
+Model: gcn
+Dataset: mutag
+Accuracy: 0.8200
+Task: graph
+Model: gcn
+Dataset: mutag
+Accuracy: 0.0000
+Task: graph
+Model: graph_gcn
+Dataset: mutag
+Accuracy: 0.7713

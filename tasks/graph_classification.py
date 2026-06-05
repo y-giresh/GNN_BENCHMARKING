@@ -1,8 +1,5 @@
-import torch
 from torch_geometric.datasets import TUDataset
-
-
-torch.manual_seed(42)
+from torch_geometric.loader import DataLoader
 
 
 def load_graph_dataset():
@@ -15,4 +12,14 @@ def load_graph_dataset():
 
     )
 
-    return dataset
+    train_loader = DataLoader(
+
+        dataset,
+
+        batch_size=32,
+
+        shuffle=True
+
+    )
+
+    return dataset, train_loader

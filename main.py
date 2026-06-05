@@ -80,24 +80,97 @@ print(
 print()
 
 
-train(
+if task == "node":
 
-    model,
+    train(
 
-    data,
+        model,
 
-    optimizer
+        data,
 
-)
+        optimizer
+
+    )
+
+    acc = evaluate(
+
+        model,
+
+        data
+
+    )
 
 
-acc = evaluate(
+elif task == "link":
 
-    model,
+    from tasks import (
+        load_link_dataset
+    )
 
-    data
+    from utils.train import (
+        train_link
+    )
 
-)
+    from utils.evaluate import (
+        evaluate_link
+    )
+
+    dataset, train_data, val_data, test_data = (
+
+        load_link_dataset(
+            dataset_name
+        )
+
+    )
+
+    model = get_model(
+
+        model_name,
+
+        dataset.num_features,
+
+        32,
+
+        32
+
+    )
+
+    optimizer = torch.optim.Adam(
+
+        model.parameters(),
+
+        lr=0.01,
+
+        weight_decay=5e-4
+
+    )
+
+    train_link(
+
+        model,
+
+        train_data,
+
+        optimizer
+
+    )
+
+    acc = evaluate_link(
+
+        model,
+
+        test_data
+
+    )
+
+
+else:
+
+    print(
+        "Invalid Task"
+    )
+
+    sys.exit()
 
 
 print()

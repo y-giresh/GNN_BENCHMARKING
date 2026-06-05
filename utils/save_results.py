@@ -5,27 +5,27 @@ def save_result(
     accuracy
 ):
 
-    file = open(
+    with open(
 
         "results/auto_results.txt",
 
         "a"
 
-    )
+    ) as file:
 
-    file.write(
+        file.write(
 
-        f"{task}, "
+            f"\n"
 
-        f"{model}, "
+            f"Task: {task}\n"
 
-        f"{dataset}, "
+            f"Model: {model}\n"
 
-        f"{accuracy:.4f}\n"
+            f"Dataset: {dataset}\n"
 
-    )
+            f"Accuracy: {accuracy:.4f}\n"
 
-    file.close()
+        )
 
     print()
 

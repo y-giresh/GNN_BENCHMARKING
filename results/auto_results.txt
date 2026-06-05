@@ -1,1 +1,49 @@
 node, gcn, cora, 0.7920
+node, gat, cora, 0.7840
+node, graphsage, pubmed, 0.7680
+node, gin, citeseer, 0.6540
+
+Task: node
+Model: gcn
+Dataset: pubmed
+Accuracy: 0.7840
+
+Task: link
+Model: gcn
+Dataset: cora
+Accuracy: 0.7000
+
+Task: link
+Model: gcn
+Dataset: cora
+Accuracy: 0.5057
+
+Task: link
+Model: gcn
+Dataset: cora
+Accuracy: 0.7009
+
+Task: link
+Model: gat
+Dataset: cora
+Accuracy: 0.7147
+
+Task: link
+Model: graphsage
+Dataset: cora
+Accuracy: 0.7109
+
+Task: link
+Model: gin
+Dataset: cora
+Accuracy: 0.7209
+
+Task: link
+Model: gat
+Dataset: pubmed
+Accuracy: 0.7450
+
+Task: link
+Model: gat
+Dataset: citeseer
+Accuracy: 0.7077

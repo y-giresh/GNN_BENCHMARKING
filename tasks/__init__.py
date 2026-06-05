@@ -26,3 +26,6 @@ def get_dataset(
     )
 
     return dataset
+from tasks.link_prediction import (
+    load_link_dataset
+)

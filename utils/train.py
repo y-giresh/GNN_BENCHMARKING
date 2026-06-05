@@ -74,12 +74,105 @@ def train(
             )
 
 
+def decode(
+    z,
+    edge_index
+):
+
+    return (
+
+        z[
+            edge_index[0]
+        ]
+
+        *
+
+        z[
+            edge_index[1]
+        ]
+
+    ).sum(
+        dim=1
+    )
+
+
 def train_link(
     model,
     train_data,
-    optimizer
+    optimizer,
+    epochs=200
 ):
 
-    print(
-        "Link training later"
-    )
+    model.train()
+
+    for epoch in range(
+        epochs
+    ):
+
+        optimizer.zero_grad()
+
+        z = model(
+            train_data
+        )
+
+        pos = decode(
+
+            z,
+
+            train_data.edge_label_index[
+                :,
+                train_data.edge_label == 1
+            ]
+
+        )
+
+        neg = decode(
+
+            z,
+
+            train_data.edge_label_index[
+                :,
+                train_data.edge_label == 0
+            ]
+
+        )
+
+        loss = (
+
+            F.binary_cross_entropy_with_logits(
+
+                pos,
+
+                torch.ones_like(
+                    pos
+                )
+
+            )
+
+            +
+
+            F.binary_cross_entropy_with_logits(
+
+                neg,
+
+                torch.zeros_like(
+                    neg
+                )
+
+            )
+
+        )
+
+        loss.backward()
+
+        optimizer.step()
+
+        if epoch % 20 == 0:
+
+            print(
+
+                f"Epoch {epoch}"
+
+                f" | Loss {loss:.4f}"
+
+            )

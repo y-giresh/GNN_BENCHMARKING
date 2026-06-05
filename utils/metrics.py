@@ -1,35 +1,70 @@
+import os
+
+
 def compare_results():
 
-    file = open(
-        "results/auto_results.txt",
-        "r"
+    source = (
+
+        "results/auto_results.txt"
+
     )
 
-    lines = file.readlines()
+    target = (
 
-    file.close()
+        "results/comparison.txt"
 
-    out = open(
-        "results/comparison.txt",
-        "w"
     )
 
-    out.write(
-        "BENCHMARK COMPARISON\n\n"
-    )
 
-    for line in lines:
+    if not os.path.exists(
 
-        if line.strip():
+        source
 
-            out.write(
-                line
-            )
+    ):
 
-    out.close()
+        return
+
+
+    with open(
+
+        source,
+
+        "r",
+
+        encoding="utf-8"
+
+    ) as f:
+
+        content = f.read()
+
+
+    with open(
+
+        target,
+
+        "w",
+
+        encoding="utf-8"
+
+    ) as f:
+
+        f.write(
+
+            "BENCHMARK SUMMARY\n\n"
+
+        )
+
+        f.write(
+
+            content
+
+        )
+
 
     print()
 
     print(
+
         "Comparison File Generated"
+
     )

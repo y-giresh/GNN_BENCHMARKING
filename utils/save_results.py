@@ -1,15 +1,41 @@
+import os
+
+
 def save_result(
+
     task,
+
     model,
+
     dataset,
+
     accuracy
+
 ):
+
+    os.makedirs(
+
+        "results",
+
+        exist_ok=True
+
+    )
+
+
+    path = (
+
+        "results/auto_results.txt"
+
+    )
+
 
     with open(
 
-        "results/auto_results.txt",
+        path,
 
-        "a"
+        "a",
+
+        encoding="utf-8"
 
     ) as file:
 
@@ -27,8 +53,11 @@ def save_result(
 
         )
 
+
     print()
 
     print(
+
         "Result Saved"
+
     )

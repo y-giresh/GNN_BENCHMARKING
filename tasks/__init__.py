@@ -3,16 +3,18 @@ from torch_geometric.datasets import (
     TUDataset
 )
 
-from tasks.link_prediction import (
-    load_link_dataset
-)
-
 
 def get_dataset(
+
     dataset_name
+
 ):
 
-    dataset_name = dataset_name.lower()
+    dataset_name = (
+
+        dataset_name.lower()
+
+    )
 
 
     if dataset_name == "cora":
@@ -59,10 +61,51 @@ def get_dataset(
         )
 
 
+    elif dataset_name == "proteins":
+
+        return TUDataset(
+
+            root="data",
+
+            name="PROTEINS"
+
+        )
+
+
+    elif dataset_name == "enzymes":
+
+        return TUDataset(
+
+            root="data",
+
+            name="ENZYMES"
+
+        )
+
+
+    elif dataset_name == "nci1":
+
+        return TUDataset(
+
+            root="data",
+
+            name="NCI1"
+
+        )
+
+
     else:
 
         raise ValueError(
 
-            "Dataset not supported"
+            f"Dataset not supported: {dataset_name}"
 
         )
+
+
+
+from .link_prediction import (
+
+    load_link_dataset
+
+)

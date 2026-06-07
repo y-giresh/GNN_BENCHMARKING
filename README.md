@@ -27,6 +27,19 @@ Datasets:
 Dataset:
 - MUTAG
 
+## Metrics:
+
+Accuracy
+Macro-F1
+Weighted-F1
+AUC
+Average Precision
+Hits@K
+Training Time
+Parameters
+Memory Usage
+Standard Deviation
+
 ## Project Structure
 
 gnn-model-benchmark/

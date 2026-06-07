@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 
 def save_result(
@@ -9,7 +10,7 @@ def save_result(
 
     dataset,
 
-    accuracy
+    metrics
 
 ):
 
@@ -22,42 +23,205 @@ def save_result(
     )
 
 
-    path = (
+    if (
 
-        "results/auto_results.txt"
+        "Accuracy"
+
+        in
+
+        metrics
+
+        and
+
+        (
+
+            "Macro_F1"
+
+            in metrics
+
+            or
+
+            "Weighted_F1"
+
+            in metrics
+
+        )
+
+    ):
+
+        file_name = (
+
+            "results/node_results.xlsx"
+
+        )
+
+
+    elif (
+
+        "AUC"
+
+        in metrics
+
+    ):
+
+        file_name = (
+
+            "results/link_results.xlsx"
+
+        )
+
+
+    else:
+
+        file_name = (
+
+            "results/graph_results.xlsx"
+
+        )
+
+
+    row = {
+
+        "Task": task,
+
+        "Model": model,
+
+        "Dataset": dataset
+
+    }
+
+
+    row.update(
+
+        metrics
 
     )
 
 
-    with open(
+    if os.path.exists(
 
-        path,
+        file_name
 
-        "a",
+    ):
 
-        encoding="utf-8"
+        df = pd.read_excel(
 
-    ) as file:
-
-        file.write(
-
-            f"\n"
-
-            f"Task: {task}\n"
-
-            f"Model: {model}\n"
-
-            f"Dataset: {dataset}\n"
-
-            f"Accuracy: {accuracy:.4f}\n"
+            file_name
 
         )
+
+    else:
+
+        df = pd.DataFrame()
+
+
+    duplicate = (
+
+        (df.get(
+
+            "Task",
+
+            pd.Series()
+
+        )
+
+        ==
+
+        task)
+
+        &
+
+        (df.get(
+
+            "Model",
+
+            pd.Series()
+
+        )
+
+        ==
+
+        model)
+
+        &
+
+        (df.get(
+
+            "Dataset",
+
+            pd.Series()
+
+        )
+
+        ==
+
+        dataset)
+
+    )
+
+
+    if len(df) > 0 and duplicate.any():
+
+        index = (
+
+            df[
+
+                duplicate
+
+            ]
+
+            .index[0]
+
+        )
+
+        for k, v in row.items():
+
+            df.loc[
+
+                index,
+
+                k
+
+            ] = v
+
+    else:
+
+        df = pd.concat(
+
+            [
+
+                df,
+
+                pd.DataFrame(
+
+                    [
+
+                        row
+
+                    ]
+
+                )
+
+            ],
+
+            ignore_index=True
+
+        )
+
+
+    df.to_excel(
+
+        file_name,
+
+        index=False
+
+    )
 
 
     print()
 
     print(
 
-        "Result Saved"
+        f"Saved → {file_name}"
 
     )

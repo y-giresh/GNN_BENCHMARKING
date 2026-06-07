@@ -1,27 +1,31 @@
 import sys
 import torch
+import time
+import psutil
+import os
 
 from tasks import get_dataset
-
 from models import get_model
 
 from utils.train import train
-
 from utils.evaluate import evaluate
 
 from utils.save_results import save_result
-
 from utils.metrics import compare_results
 
 
-if len(sys.argv) != 4:
+if len(sys.argv) < 4:
+
+    print()
 
     print(
         "Usage:"
     )
 
+    print()
+
     print(
-        "python main.py [task] [model] [dataset]"
+        "python main.py [task] [model] [dataset] [hidden] [lr] [dropout] [weight_decay] [epochs]"
     )
 
     sys.exit()
@@ -32,6 +36,70 @@ task = sys.argv[1]
 model_name = sys.argv[2]
 
 dataset_name = sys.argv[3]
+
+
+hidden_dim = (
+
+    int(sys.argv[4])
+
+    if len(sys.argv) > 4
+
+    else 32
+
+)
+
+learning_rate = (
+
+    float(sys.argv[5])
+
+    if len(sys.argv) > 5
+
+    else 0.01
+
+)
+
+dropout = (
+
+    float(sys.argv[6])
+
+    if len(sys.argv) > 6
+
+    else 0.5
+
+)
+
+weight_decay = (
+
+    float(sys.argv[7])
+
+    if len(sys.argv) > 7
+
+    else 5e-4
+
+)
+
+epochs = (
+
+    int(sys.argv[8])
+
+    if len(sys.argv) > 8
+
+    else 200
+
+)
+
+
+start = time.time()
+
+process = (
+
+    psutil.Process(
+
+        os.getpid()
+
+    )
+
+)
 
 
 print()
@@ -46,6 +114,28 @@ print(
     task,
     model_name,
     dataset_name
+)
+
+print()
+
+print(
+    f"Hidden={hidden_dim}"
+)
+
+print(
+    f"LR={learning_rate}"
+)
+
+print(
+    f"Dropout={dropout}"
+)
+
+print(
+    f"Weight Decay={weight_decay}"
+)
+
+print(
+    f"Epochs={epochs}"
 )
 
 print()
@@ -65,7 +155,7 @@ if task == "node":
 
         dataset.num_features,
 
-        32,
+        hidden_dim,
 
         dataset.num_classes
 
@@ -75,9 +165,9 @@ if task == "node":
 
         model.parameters(),
 
-        lr=0.01,
+        lr=learning_rate,
 
-        weight_decay=5e-4
+        weight_decay=weight_decay
 
     )
 
@@ -87,7 +177,9 @@ if task == "node":
 
         data,
 
-        optimizer
+        optimizer,
+
+        epochs
 
     )
 
@@ -128,9 +220,9 @@ elif task == "link":
 
         dataset.num_features,
 
-        32,
+        hidden_dim,
 
-        32
+        hidden_dim
 
     )
 
@@ -138,9 +230,9 @@ elif task == "link":
 
         model.parameters(),
 
-        lr=0.01,
+        lr=learning_rate,
 
-        weight_decay=5e-4
+        weight_decay=weight_decay
 
     )
 
@@ -150,7 +242,9 @@ elif task == "link":
 
         train_data,
 
-        optimizer
+        optimizer,
+
+        epochs
 
     )
 
@@ -177,13 +271,13 @@ elif task == "graph":
         evaluate_graph
     )
 
-
     dataset, loader = (
 
-        load_graph_dataset()
+        load_graph_dataset(
+            dataset_name
+        )
 
     )
-
 
     print()
 
@@ -203,28 +297,27 @@ elif task == "graph":
         dataset.num_classes
     )
 
-
     model = get_model(
 
         model_name,
 
         dataset.num_features,
 
-        32,
+        hidden_dim,
 
         dataset.num_classes
 
     )
 
-
     optimizer = torch.optim.Adam(
 
         model.parameters(),
 
-        lr=0.01
+        lr=learning_rate,
+
+        weight_decay=weight_decay
 
     )
-
 
     train_graph(
 
@@ -232,10 +325,11 @@ elif task == "graph":
 
         loader,
 
-        optimizer
+        optimizer,
+
+        epochs
 
     )
-
 
     acc = evaluate_graph(
 
@@ -254,12 +348,82 @@ else:
     sys.exit()
 
 
+
+end = time.time()
+
+
+train_time = round(
+
+    end - start,
+
+    2
+
+)
+
+
+params = (
+
+    sum(
+
+        p.numel()
+
+        for p in model.parameters()
+
+    )
+
+)
+
+
+memory = round(
+
+    process.memory_info().rss
+
+    /
+
+    1024
+
+    /
+
+    1024,
+
+    2
+
+)
+
+
+acc[
+
+    "Training_Time"
+
+] = train_time
+
+
+acc[
+
+    "Parameters"
+
+] = params
+
+
+acc[
+
+    "Memory_MB"
+
+] = memory
+
+
 print()
 
 print(
-    "Final Accuracy:",
+    "Final Metrics:"
+)
+
+print()
+
+print(
     acc
 )
+
 
 save_result(
 
@@ -272,5 +436,6 @@ save_result(
     acc
 
 )
+
 
 compare_results()

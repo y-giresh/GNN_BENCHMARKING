@@ -2,26 +2,41 @@ import torch
 import torch.nn.functional as F
 
 from torch_geometric.nn import (
+
     GATConv,
+
+    BatchNorm,
+
     global_mean_pool
+
 )
 
 
-torch.manual_seed(42)
-
-
 class GAT(
+
     torch.nn.Module
+
 ):
 
     def __init__(
+
         self,
+
         input_dim,
+
         hidden_dim,
-        output_dim
+
+        output_dim,
+
+        dropout=0.5
+
     ):
 
         super().__init__()
+
+
+        self.dropout = dropout
+
 
         self.conv1 = GATConv(
 
@@ -31,9 +46,17 @@ class GAT(
 
             heads=8,
 
-            dropout=0.6
+            dropout=dropout
 
         )
+
+
+        self.bn1 = BatchNorm(
+
+            hidden_dim * 8
+
+        )
+
 
         self.conv2 = GATConv(
 
@@ -45,7 +68,7 @@ class GAT(
 
             concat=False,
 
-            dropout=0.6
+            dropout=dropout
 
         )
 
@@ -70,19 +93,31 @@ class GAT(
 
         )
 
-        x = F.elu(
+
+        x = self.bn1(
+
             x
+
         )
+
+
+        x = F.elu(
+
+            x
+
+        )
+
 
         x = F.dropout(
 
             x,
 
-            p=0.6,
+            p=self.dropout,
 
             training=self.training
 
         )
+
 
         x = self.conv2(
 

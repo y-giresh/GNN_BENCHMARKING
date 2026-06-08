@@ -3,16 +3,35 @@ import torch.nn.functional as F
 
 
 def train(
+
     model,
+
     data,
+
     optimizer,
-    epochs=200
+
+    epochs=200,
+
+    patience=40
+
 ):
+
+    best_val = float(
+
+        "inf"
+
+    )
+
+    wait = 0
+
 
     model.train()
 
+
     for epoch in range(
+
         epochs
+
     ):
 
         optimizer.zero_grad()
@@ -30,8 +49,11 @@ def train(
         except TypeError:
 
             out = model(
+
                 data
+
             )
+
 
         loss = F.cross_entropy(
 
@@ -45,33 +67,134 @@ def train(
 
         )
 
+
         loss.backward()
 
         optimizer.step()
 
+
         model.eval()
+
 
         with torch.no_grad():
 
-            pred = out.argmax(
-                dim=1
+            pred = (
+
+                out.argmax(
+
+                    dim=1
+
+                )
+
             )
+
 
             train_acc = (
 
-                pred[
-                    data.train_mask
-                ]
+                (
 
-                ==
+                    pred[
+                        data.train_mask
+                    ]
 
-                data.y[
-                    data.train_mask
-                ]
+                    ==
 
-            ).float().mean()
+                    data.y[
+                        data.train_mask
+                    ]
+
+                )
+
+                .float()
+
+                .mean()
+
+            )
+
+
+            if hasattr(
+
+                data,
+
+                "val_mask"
+
+            ):
+
+                try:
+
+                    val_out = model(
+
+                        data.x,
+
+                        data.edge_index
+
+                    )
+
+                except TypeError:
+
+                    val_out = model(
+
+                        data
+
+                    )
+
+
+                val_loss = (
+
+                    F.cross_entropy(
+
+                        val_out[
+                            data.val_mask
+                        ],
+
+                        data.y[
+                            data.val_mask
+                        ]
+
+                    )
+
+                )
+
+            else:
+
+                val_loss = (
+
+                    loss
+
+                )
+
 
         model.train()
+
+
+        if val_loss < best_val:
+
+            best_val = (
+
+                val_loss
+
+            )
+
+            wait = 0
+
+
+        else:
+
+            wait += 1
+
+
+        if wait >= patience:
+
+            print()
+
+            print(
+
+                f"Early stopping at epoch {epoch}"
+
+            )
+
+            break
+
 
         if epoch % 20 == 0:
 
@@ -83,13 +206,19 @@ def train(
 
                 f" | Train {train_acc:.4f}"
 
+                f" | Val {val_loss:.4f}"
+
             )
 
 
 
+
 def decode(
+
     z,
+
     edge_index
+
 ):
 
     return (
@@ -105,22 +234,33 @@ def decode(
         ]
 
     ).sum(
+
         dim=1
+
     )
 
 
 
+
 def train_link(
+
     model,
+
     train_data,
+
     optimizer,
+
     epochs=200
+
 ):
 
     model.train()
 
+
     for epoch in range(
+
         epochs
+
     ):
 
         optimizer.zero_grad()
@@ -138,8 +278,11 @@ def train_link(
         except TypeError:
 
             z = model(
+
                 train_data
+
             )
+
 
         pos = decode(
 
@@ -152,6 +295,7 @@ def train_link(
 
         )
 
+
         neg = decode(
 
             z,
@@ -163,6 +307,7 @@ def train_link(
 
         )
 
+
         loss = (
 
             F.binary_cross_entropy_with_logits(
@@ -170,7 +315,9 @@ def train_link(
                 pos,
 
                 torch.ones_like(
+
                     pos
+
                 )
 
             )
@@ -182,16 +329,20 @@ def train_link(
                 neg,
 
                 torch.zeros_like(
+
                     neg
+
                 )
 
             )
 
         )
 
+
         loss.backward()
 
         optimizer.step()
+
 
         if epoch % 20 == 0:
 
@@ -202,6 +353,7 @@ def train_link(
                 f" | Loss {loss:.4f}"
 
             )
+
 
 
 
@@ -219,6 +371,7 @@ def train_graph(
 
     model.train()
 
+
     for epoch in range(
 
         epochs
@@ -226,6 +379,7 @@ def train_graph(
     ):
 
         total_loss = 0
+
 
         for batch in loader:
 
@@ -241,6 +395,7 @@ def train_graph(
 
             )
 
+
             loss = F.cross_entropy(
 
                 out,
@@ -249,9 +404,11 @@ def train_graph(
 
             )
 
+
             loss.backward()
 
             optimizer.step()
+
 
             total_loss += (
 
@@ -259,14 +416,13 @@ def train_graph(
 
             )
 
+
         if epoch % 10 == 0:
 
             print(
 
                 f"Epoch {epoch}"
 
-                f" | Loss "
-
-                f"{total_loss:.4f}"
+                f" | Loss {total_loss:.4f}"
 
             )

@@ -2,26 +2,41 @@ import torch
 import torch.nn.functional as F
 
 from torch_geometric.nn import (
+
     SAGEConv,
+
+    BatchNorm,
+
     global_mean_pool
+
 )
 
 
-torch.manual_seed(42)
-
-
 class GraphSAGE(
+
     torch.nn.Module
+
 ):
 
     def __init__(
+
         self,
+
         input_dim,
+
         hidden_dim,
-        output_dim
+
+        output_dim,
+
+        dropout=0.5
+
     ):
 
         super().__init__()
+
+
+        self.dropout = dropout
+
 
         self.conv1 = SAGEConv(
 
@@ -30,6 +45,14 @@ class GraphSAGE(
             hidden_dim
 
         )
+
+
+        self.bn1 = BatchNorm(
+
+            hidden_dim
+
+        )
+
 
         self.conv2 = SAGEConv(
 
@@ -60,9 +83,31 @@ class GraphSAGE(
 
         )
 
-        x = F.relu(
+
+        x = self.bn1(
+
             x
+
         )
+
+
+        x = F.relu(
+
+            x
+
+        )
+
+
+        x = F.dropout(
+
+            x,
+
+            p=self.dropout,
+
+            training=self.training
+
+        )
+
 
         x = self.conv2(
 

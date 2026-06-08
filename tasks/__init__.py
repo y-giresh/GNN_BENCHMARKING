@@ -1,7 +1,154 @@
+import torch
+
 from torch_geometric.datasets import (
+
     Planetoid,
+
     TUDataset
+
 )
+
+
+
+def create_split(
+
+    dataset
+
+):
+
+    data = dataset[0]
+
+    num_nodes = (
+
+        data.num_nodes
+
+    )
+
+
+    torch.manual_seed(
+
+        42
+
+    )
+
+
+    indices = (
+
+        torch.randperm(
+
+            num_nodes
+
+        )
+
+    )
+
+
+    train_end = int(
+
+        0.70
+
+        *
+
+        num_nodes
+
+    )
+
+
+    val_end = int(
+
+        0.85
+
+        *
+
+        num_nodes
+
+    )
+
+
+    train_mask = torch.zeros(
+
+        num_nodes,
+
+        dtype=torch.bool
+
+    )
+
+
+    val_mask = torch.zeros(
+
+        num_nodes,
+
+        dtype=torch.bool
+
+    )
+
+
+    test_mask = torch.zeros(
+
+        num_nodes,
+
+        dtype=torch.bool
+
+    )
+
+
+    train_mask[
+
+        indices[
+
+            :train_end
+
+        ]
+
+    ] = True
+
+
+    val_mask[
+
+        indices[
+
+            train_end:val_end
+
+        ]
+
+    ] = True
+
+
+    test_mask[
+
+        indices[
+
+            val_end:
+
+        ]
+
+    ] = True
+
+
+    data.train_mask = (
+
+        train_mask
+
+    )
+
+
+    data.val_mask = (
+
+        val_mask
+
+    )
+
+
+    data.test_mask = (
+
+        test_mask
+
+    )
+
+
+    return dataset
+
+
 
 
 def get_dataset(
@@ -19,33 +166,45 @@ def get_dataset(
 
     if dataset_name == "cora":
 
-        return Planetoid(
+        return create_split(
 
-            root="data",
+            Planetoid(
 
-            name="Cora"
+                root="data",
+
+                name="Cora"
+
+            )
 
         )
 
 
     elif dataset_name == "citeseer":
 
-        return Planetoid(
+        return create_split(
 
-            root="data",
+            Planetoid(
 
-            name="CiteSeer"
+                root="data",
+
+                name="CiteSeer"
+
+            )
 
         )
 
 
     elif dataset_name == "pubmed":
 
-        return Planetoid(
+        return create_split(
 
-            root="data",
+            Planetoid(
 
-            name="PubMed"
+                root="data",
+
+                name="PubMed"
+
+            )
 
         )
 

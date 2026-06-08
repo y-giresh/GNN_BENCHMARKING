@@ -10,7 +10,17 @@ def save_result(
 
     dataset,
 
-    metrics
+    metrics,
+
+    hidden=None,
+
+    lr=None,
+
+    dropout=None,
+
+    weight_decay=None,
+
+    epochs=None
 
 ):
 
@@ -23,61 +33,62 @@ def save_result(
     )
 
 
-    if (
+    hyper = (
 
-        "Accuracy"
+        os.environ.get(
 
-        in
-
-        metrics
-
-        and
-
-        (
-
-            "Macro_F1"
-
-            in metrics
-
-            or
-
-            "Weighted_F1"
-
-            in metrics
+            "HYPER"
 
         )
 
-    ):
+        ==
+
+        "1"
+
+    )
+
+
+    if hyper:
 
         file_name = (
 
-            "results/node_results.xlsx"
+            "results/hyperparameter_results.xlsx"
 
         )
-
-
-    elif (
-
-        "AUC"
-
-        in metrics
-
-    ):
-
-        file_name = (
-
-            "results/link_results.xlsx"
-
-        )
-
 
     else:
 
-        file_name = (
+        if task == "node":
 
-            "results/graph_results.xlsx"
+            file_name = (
 
-        )
+                "results/node_results.xlsx"
+
+            )
+
+        elif task == "link":
+
+            file_name = (
+
+                "results/link_results.xlsx"
+
+            )
+
+        elif task == "graph":
+
+            file_name = (
+
+                "results/graph_results.xlsx"
+
+            )
+
+        else:
+
+            file_name = (
+
+                "results/results.xlsx"
+
+            )
 
 
     row = {
@@ -86,7 +97,17 @@ def save_result(
 
         "Model": model,
 
-        "Dataset": dataset
+        "Dataset": dataset,
+
+        "Hidden": hidden,
+
+        "LR": lr,
+
+        "Dropout": dropout,
+
+        "Weight_Decay": weight_decay,
+
+        "Epochs": epochs
 
     }
 
@@ -117,52 +138,42 @@ def save_result(
 
     duplicate = (
 
-        (df.get(
-
-            "Task",
-
-            pd.Series()
-
-        )
-
-        ==
-
-        task)
+        (df.get("Task", pd.Series(dtype=str)) == task)
 
         &
 
-        (df.get(
-
-            "Model",
-
-            pd.Series()
-
-        )
-
-        ==
-
-        model)
+        (df.get("Model", pd.Series(dtype=str)) == model)
 
         &
 
-        (df.get(
+        (df.get("Dataset", pd.Series(dtype=str)) == dataset)
 
-            "Dataset",
+        &
 
-            pd.Series()
+        (df.get("Hidden", pd.Series(dtype=float)) == hidden)
 
-        )
+        &
 
-        ==
+        (df.get("LR", pd.Series(dtype=float)) == lr)
 
-        dataset)
+        &
+
+        (df.get("Dropout", pd.Series(dtype=float)) == dropout)
+
+        &
+
+        (df.get("Weight_Decay", pd.Series(dtype=float)) == weight_decay)
+
+        &
+
+        (df.get("Epochs", pd.Series(dtype=float)) == epochs)
 
     )
 
 
     if len(df) > 0 and duplicate.any():
 
-        index = (
+        idx = (
 
             df[
 
@@ -174,15 +185,15 @@ def save_result(
 
         )
 
-        for k, v in row.items():
+        for col in row:
 
             df.loc[
 
-                index,
+                idx,
 
-                k
+                col
 
-            ] = v
+            ] = row[col]
 
     else:
 
@@ -222,6 +233,6 @@ def save_result(
 
     print(
 
-        f"Saved → {file_name}"
+        f"Saved -> {file_name}"
 
     )

@@ -3,6 +3,9 @@ import torch
 import time
 import psutil
 import os
+import random
+import numpy as np
+import networkx as nx
 
 from tasks import get_dataset
 from models import get_model
@@ -11,7 +14,31 @@ from utils.train import train
 from utils.evaluate import evaluate
 
 from utils.save_results import save_result
-from utils.metrics import compare_results
+from utils.compare_results import compare_results
+
+from utils.heuristic_baselines import (
+
+    common_neighbors_score,
+
+    adamic_adar_score,
+
+    preferential_attachment_score
+
+)
+
+
+SEED = 42
+
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+
+if torch.cuda.is_available():
+
+    torch.cuda.manual_seed_all(SEED)
+
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 
 if len(sys.argv) < 4:
@@ -38,67 +65,21 @@ model_name = sys.argv[2]
 dataset_name = sys.argv[3]
 
 
-hidden_dim = (
+hidden_dim = int(sys.argv[4]) if len(sys.argv) > 4 else 32
 
-    int(sys.argv[4])
+learning_rate = float(sys.argv[5]) if len(sys.argv) > 5 else 0.01
 
-    if len(sys.argv) > 4
+dropout = float(sys.argv[6]) if len(sys.argv) > 6 else 0.5
 
-    else 32
+weight_decay = float(sys.argv[7]) if len(sys.argv) > 7 else 5e-4
 
-)
-
-learning_rate = (
-
-    float(sys.argv[5])
-
-    if len(sys.argv) > 5
-
-    else 0.01
-
-)
-
-dropout = (
-
-    float(sys.argv[6])
-
-    if len(sys.argv) > 6
-
-    else 0.5
-
-)
-
-weight_decay = (
-
-    float(sys.argv[7])
-
-    if len(sys.argv) > 7
-
-    else 5e-4
-
-)
-
-epochs = (
-
-    int(sys.argv[8])
-
-    if len(sys.argv) > 8
-
-    else 200
-
-)
+epochs = int(sys.argv[8]) if len(sys.argv) > 8 else 200
 
 
 start = time.time()
 
-process = (
-
-    psutil.Process(
-
-        os.getpid()
-
-    )
-
+process = psutil.Process(
+    os.getpid()
 )
 
 
@@ -115,30 +96,6 @@ print(
     model_name,
     dataset_name
 )
-
-print()
-
-print(
-    f"Hidden={hidden_dim}"
-)
-
-print(
-    f"LR={learning_rate}"
-)
-
-print(
-    f"Dropout={dropout}"
-)
-
-print(
-    f"Weight Decay={weight_decay}"
-)
-
-print(
-    f"Epochs={epochs}"
-)
-
-print()
 
 
 if task == "node":
@@ -157,7 +114,9 @@ if task == "node":
 
         hidden_dim,
 
-        dataset.num_classes
+        dataset.num_classes,
+
+        dropout
 
     )
 
@@ -194,17 +153,12 @@ if task == "node":
 
 elif task == "link":
 
-    from tasks import (
-        load_link_dataset
-    )
+    from tasks import load_link_dataset
 
-    from utils.train import (
-        train_link
-    )
+    from utils.train import train_link
 
-    from utils.evaluate import (
-        evaluate_link
-    )
+    from utils.evaluate import evaluate_link
+
 
     dataset, train_data, val_data, test_data = (
 
@@ -214,6 +168,7 @@ elif task == "link":
 
     )
 
+
     model = get_model(
 
         model_name,
@@ -222,9 +177,12 @@ elif task == "link":
 
         hidden_dim,
 
-        hidden_dim
+        hidden_dim,
+
+        dropout
 
     )
+
 
     optimizer = torch.optim.Adam(
 
@@ -235,6 +193,7 @@ elif task == "link":
         weight_decay=weight_decay
 
     )
+
 
     train_link(
 
@@ -248,11 +207,100 @@ elif task == "link":
 
     )
 
+
     acc = evaluate_link(
 
         model,
 
         test_data
+
+    )
+
+
+    graph = nx.Graph()
+
+    edges = (
+
+        train_data.edge_index
+
+        .cpu()
+
+        .numpy()
+
+    )
+
+
+    for i in range(
+
+        edges.shape[1]
+
+    ):
+
+        graph.add_edge(
+
+            int(
+
+                edges[0][i]
+
+            ),
+
+            int(
+
+                edges[1][i]
+
+            )
+
+        )
+
+
+    u = 0
+
+    v = 1
+
+
+    acc["Common_Neighbors"] = (
+
+        common_neighbors_score(
+
+            graph,
+
+            u,
+
+            v
+
+        )
+
+    )
+
+
+    acc["Adamic_Adar"] = round(
+
+        adamic_adar_score(
+
+            graph,
+
+            u,
+
+            v
+
+        ),
+
+        4
+
+    )
+
+
+    acc["Preferential_Attachment"] = (
+
+        preferential_attachment_score(
+
+            graph,
+
+            u,
+
+            v
+
+        )
 
     )
 
@@ -271,7 +319,8 @@ elif task == "graph":
         evaluate_graph
     )
 
-    dataset, loader = (
+
+    dataset, fold_loaders = (
 
         load_graph_dataset(
             dataset_name
@@ -279,65 +328,107 @@ elif task == "graph":
 
     )
 
-    print()
 
-    print(
-        "Graph Classification Mode"
-    )
+    fold_scores = []
 
-    print()
 
-    print(
-        "Graphs:",
-        len(dataset)
-    )
+    for fold_num, (
 
-    print(
-        "Classes:",
-        dataset.num_classes
-    )
+        train_loader,
 
-    model = get_model(
+        test_loader
 
-        model_name,
+    ) in enumerate(
 
-        dataset.num_features,
+        fold_loaders,
 
-        hidden_dim,
+        1
 
-        dataset.num_classes
+    ):
 
-    )
 
-    optimizer = torch.optim.Adam(
+        print()
 
-        model.parameters(),
+        print(
 
-        lr=learning_rate,
+            f"Fold {fold_num}"
 
-        weight_decay=weight_decay
+        )
 
-    )
 
-    train_graph(
+        model = get_model(
 
-        model,
+            model_name,
 
-        loader,
+            dataset.num_features,
 
-        optimizer,
+            hidden_dim,
 
-        epochs
+            dataset.num_classes,
 
-    )
+            dropout
 
-    acc = evaluate_graph(
+        )
 
-        model,
 
-        loader
+        optimizer = torch.optim.Adam(
 
-    )
+            model.parameters(),
+
+            lr=learning_rate,
+
+            weight_decay=weight_decay
+
+        )
+
+
+        train_graph(
+
+            model,
+
+            train_loader,
+
+            optimizer,
+
+            epochs
+
+        )
+
+
+        result = evaluate_graph(
+
+            model,
+
+            test_loader
+
+        )
+
+
+        score = result["Accuracy"]
+
+
+        fold_scores.append(
+
+            score
+
+        )
+
+
+        print(
+
+            f"Fold Accuracy: {score:.4f}"
+
+        )
+
+
+    acc = {
+
+        "Accuracy":
+
+        f"{round(np.mean(fold_scores),4)} ± {round(np.std(fold_scores),4)}"
+
+    }
+
 
 else:
 
@@ -348,11 +439,10 @@ else:
     sys.exit()
 
 
-
 end = time.time()
 
 
-train_time = round(
+acc["Training_Time"] = round(
 
     end - start,
 
@@ -361,7 +451,7 @@ train_time = round(
 )
 
 
-params = (
+acc["Parameters"] = (
 
     sum(
 
@@ -374,7 +464,7 @@ params = (
 )
 
 
-memory = round(
+acc["Memory_MB"] = round(
 
     process.memory_info().rss
 
@@ -389,27 +479,6 @@ memory = round(
     2
 
 )
-
-
-acc[
-
-    "Training_Time"
-
-] = train_time
-
-
-acc[
-
-    "Parameters"
-
-] = params
-
-
-acc[
-
-    "Memory_MB"
-
-] = memory
 
 
 print()
@@ -433,7 +502,17 @@ save_result(
 
     dataset_name,
 
-    acc
+    acc,
+    
+    hidden_dim,
+    
+    learning_rate,
+    
+    dropout,
+    
+    weight_decay,
+    
+    epochs
 
 )
 

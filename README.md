@@ -1,108 +1,198 @@
-# GNN Benchmark Project
+# GNN Model Benchmark
 
-Benchmarking Graph Neural Network models across different graph learning tasks.
+A benchmarking framework for comparing Graph Neural Network (GNN) models across multiple graph learning tasks.
 
-## Models
+## Implemented Models
 
-- GCN
-- GAT
-- GraphSAGE
-- GIN
+* GCN (Graph Convolutional Network)
+* GAT (Graph Attention Network)
+* GraphSAGE
+* GIN (Graph Isomorphism Network)
 
-## Tasks
+---
 
-### Node Classification
+## Supported Tasks
+
+### 1. Node Classification
+
 Datasets:
-- Cora
-- CiteSeer
-- PubMed
 
-### Link Prediction
+* Cora
+* CiteSeer
+* PubMed
+
+Metrics:
+
+* Accuracy
+* Macro F1
+* Weighted F1
+* Training Time
+* Memory Usage
+* Parameter Count
+
+---
+
+### 2. Link Prediction
+
 Datasets:
-- Cora
-- CiteSeer
-- PubMed
 
-### Graph Classification
-Dataset:
-- MUTAG
+* Cora
+* CiteSeer
+* PubMed
 
-## Metrics:
+Metrics:
 
-Accuracy
-Macro-F1
-Weighted-F1
-AUC
-Average Precision
-Hits@K
-Training Time
-Parameters
-Memory Usage
-Standard Deviation
+* AUC
+* Average Precision
+* F1
+* Hits@K
 
-## Project Structure
+Baselines:
 
-gnn-model-benchmark/
+* Common Neighbors
+* Adamic Adar
+* Preferential Attachment
 
-├── data/
+---
 
-├── models/
+### 3. Graph Classification
 
-├── tasks/
+Datasets:
 
-├── results/
+* MUTAG
+* PROTEINS
+* ENZYMES
+* NCI1
 
-├── utils/
+Metrics:
 
-├── main.py
+* Accuracy
+* Mean ± Standard Deviation
+* Confusion Matrix
 
-├── requirements.txt
+---
 
-└── README.md
+## Features Added
 
+ Train / Test pipeline
 
-## Run Experiments
+ Validation monitoring
 
-Node Classification
+ Early Stopping (Patience = 20)
+
+ Hyperparameter tuning
+
+ Random seed reproducibility
+
+```python
+SEED = 42
+```
+
+ Dropout support
+
+ Link prediction heuristic baselines
+
+ Memory tracking
+
+ Parameter counting
+
+ Result comparison
+
+ Automatic Excel export
+
+---
+
+## Hyperparameters Tested
+
+| Parameter        | Values             |
+| ---------------- | ------------------ |
+| Hidden Dimension | 32, 64, 128        |
+| Learning Rate    | 0.001, 0.005, 0.01 |
+| Dropout          | 0.3, 0.5           |
+| Weight Decay     | 1e-4, 5e-4         |
+| Epochs           | 100–300            |
+| Early Stopping   | Patience = 20      |
+
+---
+
+## Generated Result Files
+
+### Standard Runs
+
+results/
+
+* node_results.xlsx
+* link_results.xlsx
+* graph_results.xlsx
+
+### Hyperparameter Runs
+
+results/
+
+* hyperparameter_results.xlsx
+
+---
+
+## Batch Files
+
+Run all benchmarks:
+
+```bash
+run_all.bat
+```
+
+Run hyperparameter search:
+
+```bash
+run_hyperparameters.bat
+```
+
+---
+
+## Example Commands
+
+Node:
 
 ```bash
 python main.py node gcn cora
 ```
 
-Link Prediction
+Link:
 
 ```bash
-python main.py link gin cora
+python main.py link gat citeseer
 ```
 
-Graph Classification
+Graph:
 
 ```bash
-python main.py graph gcn mutag
+python main.py graph gin mutag
 ```
 
-## Output
+---
 
-Results are automatically saved inside:
+## Best Models
 
-results/
+| Task                 | Best Model |
+| -------------------- | ---------- |
+| Node Classification  | GCN        |
+| Link Prediction      | GAT        |
+| Graph Classification | GIN        |
 
-comparison.txt
+---
 
-auto_results.txt
+## Tech Stack
 
-## Current Status
+* Python
+* PyTorch
+* PyTorch Geometric
+* NetworkX
+* NumPy
+* Pandas
+* Scikit-learn
 
-Completed:
-- Node Classification
-- Link Prediction
-- Graph Classification Setup
+---
 
+## Author
 
-## Result
-
-- GCN worked best for node classification because neighborhood aggregation was sufficient.
-
-- GAT performed better in link prediction because attention helps identify important connections.
-
-- GIN performed best in graph classification because it captures graph structure more strongly.
+Giresh Y

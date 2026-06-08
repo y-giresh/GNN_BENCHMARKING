@@ -7,7 +7,9 @@ from sklearn.metrics import (
 
     roc_auc_score,
 
-    average_precision_score
+    average_precision_score,
+
+    confusion_matrix
 
 )
 
@@ -372,7 +374,10 @@ def evaluate_graph(
 
     model.eval()
 
-    fold_scores = []
+
+    y_true = []
+
+    y_pred = []
 
 
     with torch.no_grad():
@@ -401,52 +406,81 @@ def evaluate_graph(
             )
 
 
-            acc = (
+            y_true.extend(
 
-                (
+                batch.y
 
-                    pred
+                .cpu()
 
-                    ==
-
-                    batch.y
-
-                )
-
-                .float()
-
-                .mean()
-
-                .item()
+                .numpy()
 
             )
 
 
-            fold_scores.append(
+            y_pred.extend(
 
-                acc
+                pred
+
+                .cpu()
+
+                .numpy()
 
             )
 
 
-    mean_acc = (
+    y_true = np.array(
 
-        np.mean(
-
-            fold_scores
-
-        )
+        y_true
 
     )
 
 
-    std_acc = (
+    y_pred = np.array(
 
-        np.std(
+        y_pred
 
-            fold_scores
+    )
+
+
+    acc = round(
+
+        (
+
+            y_true
+
+            ==
+
+            y_pred
 
         )
+
+        .mean(),
+
+        4
+
+    )
+
+
+    cm = confusion_matrix(
+
+        y_true,
+
+        y_pred
+
+    )
+
+
+    print()
+
+    print(
+
+        "Confusion Matrix"
+
+    )
+
+    print(
+
+        cm
 
     )
 
@@ -455,37 +489,6 @@ def evaluate_graph(
 
         "Accuracy":
 
-        f"{mean_acc:.5f} ± {std_acc:.5f}",
-
-
-        "Accuracy_Mean":
-
-        round(
-
-            mean_acc,
-
-            5
-
-        ),
-
-
-        "Accuracy_STD":
-
-        round(
-
-            std_acc,
-
-            5
-
-        ),
-
-
-        "Folds":
-
-        len(
-
-            fold_scores
-
-        )
+        acc
 
     }

@@ -5,10 +5,17 @@ from models.gin import GIN
 
 
 def get_model(
+
     name,
+
     input_dim,
+
     hidden_dim,
-    output_dim
+
+    output_dim,
+
+    dropout=0.5
+
 ):
 
     models = {
@@ -23,14 +30,19 @@ def get_model(
 
     }
 
+
     return models[
+
         name
+
     ](
 
         input_dim,
 
         hidden_dim,
 
-        output_dim
+        output_dim,
+
+        dropout
 
     )

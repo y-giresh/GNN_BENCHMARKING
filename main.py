@@ -200,6 +200,8 @@ elif task == "link":
         model,
 
         train_data,
+        
+        val_data,
 
         optimizer,
 
@@ -253,52 +255,92 @@ elif task == "link":
         )
 
 
-    u = 0
+    edge_pairs = []
 
-    v = 1
+
+    test_edges = (
+
+        test_data.edge_label_index
+
+        .cpu()
+
+        .numpy()
+
+    )
+
+
+    for i in range(
+
+        test_edges.shape[1]
+
+    ):
+
+        edge_pairs.append(
+
+            (
+
+                int(
+
+                    test_edges[0][i]
+
+                ),
+
+                int(
+
+                    test_edges[1][i]
+
+                )
+
+            )
+
+        )
 
 
     acc["Common_Neighbors"] = (
 
-        common_neighbors_score(
+        float(
 
-            graph,
+            common_neighbors_score(
 
-            u,
+                graph,
 
-            v
+                edge_pairs
+
+            )
 
         )
 
     )
 
 
-    acc["Adamic_Adar"] = round(
+    acc["Adamic_Adar"] = (
 
-        adamic_adar_score(
+        float(
 
-            graph,
+            adamic_adar_score(
 
-            u,
+                graph,
 
-            v
+                edge_pairs
 
-        ),
+            )
 
-        4
+        )
 
     )
 
 
     acc["Preferential_Attachment"] = (
 
-        preferential_attachment_score(
+        float(
 
-            graph,
+            preferential_attachment_score(
 
-            u,
+                graph,
 
-            v
+                edge_pairs
+
+            )
 
         )
 

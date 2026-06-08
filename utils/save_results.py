@@ -127,7 +127,9 @@ def save_result(
 
         df = pd.read_excel(
 
-            file_name
+            file_name,
+
+            dtype=object
 
         )
 
@@ -136,37 +138,44 @@ def save_result(
         df = pd.DataFrame()
 
 
+    for col in row:
+
+        if col not in df.columns:
+
+            df[col] = None
+
+
     duplicate = (
 
-        (df.get("Task", pd.Series(dtype=str)) == task)
+        (df["Task"] == task)
 
         &
 
-        (df.get("Model", pd.Series(dtype=str)) == model)
+        (df["Model"] == model)
 
         &
 
-        (df.get("Dataset", pd.Series(dtype=str)) == dataset)
+        (df["Dataset"] == dataset)
 
         &
 
-        (df.get("Hidden", pd.Series(dtype=float)) == hidden)
+        (df["Hidden"].astype(str) == str(hidden))
 
         &
 
-        (df.get("LR", pd.Series(dtype=float)) == lr)
+        (df["LR"].astype(str) == str(lr))
 
         &
 
-        (df.get("Dropout", pd.Series(dtype=float)) == dropout)
+        (df["Dropout"].astype(str) == str(dropout))
 
         &
 
-        (df.get("Weight_Decay", pd.Series(dtype=float)) == weight_decay)
+        (df["Weight_Decay"].astype(str) == str(weight_decay))
 
         &
 
-        (df.get("Epochs", pd.Series(dtype=float)) == epochs)
+        (df["Epochs"].astype(str) == str(epochs))
 
     )
 
@@ -185,7 +194,20 @@ def save_result(
 
         )
 
+
         for col in row:
+
+            df[col] = (
+
+                df[col]
+
+                .astype(
+
+                    object
+
+                )
+
+            )
 
             df.loc[
 
@@ -218,6 +240,13 @@ def save_result(
             ignore_index=True
 
         )
+
+
+    df = df.astype(
+
+        object
+
+    )
 
 
     df.to_excel(

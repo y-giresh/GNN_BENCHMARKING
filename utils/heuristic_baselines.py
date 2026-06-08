@@ -1,52 +1,89 @@
 import networkx as nx
+import numpy as np
 
 
 def common_neighbors_score(
 
     graph,
 
-    u,
-
-    v
+    edge_pairs
 
 ):
 
-    try:
-
-        if (
-
-            u not in graph
-
-            or
-
-            v not in graph
-
-        ):
-
-            return 0
+    scores = []
 
 
-        return len(
+    for u, v in edge_pairs:
 
-            list(
+        try:
 
-                nx.common_neighbors(
+            if (
 
-                    graph,
+                u not in graph
 
-                    u,
+                or
 
-                    v
+                v not in graph
+
+            ):
+
+                continue
+
+
+            score = len(
+
+                list(
+
+                    nx.common_neighbors(
+
+                        graph,
+
+                        u,
+
+                        v
+
+                    )
 
                 )
 
             )
 
-        )
 
-    except:
+            scores.append(
+
+                score
+
+            )
+
+        except:
+
+            continue
+
+
+    if len(
+
+        scores
+
+    ) == 0:
 
         return 0
+
+
+    return round(
+
+        float(
+
+            np.mean(
+
+                scores
+
+            )
+
+        ),
+
+        4
+
+    )
 
 
 
@@ -55,66 +92,94 @@ def adamic_adar_score(
 
     graph,
 
-    u,
-
-    v
+    edge_pairs
 
 ):
 
-    try:
-
-        if (
-
-            u not in graph
-
-            or
-
-            v not in graph
-
-        ):
-
-            return 0
+    scores = []
 
 
-        score = list(
+    for u, v in edge_pairs:
 
-            nx.adamic_adar_index(
+        try:
 
-                graph,
+            if (
 
-                [
+                u not in graph
 
-                    (
+                or
 
-                        u,
+                v not in graph
 
-                        v
+            ):
 
-                    )
+                continue
 
-                ]
+
+            score = list(
+
+                nx.adamic_adar_index(
+
+                    graph,
+
+                    [
+
+                        (
+
+                            u,
+
+                            v
+
+                        )
+
+                    ]
+
+                )
 
             )
 
-        )
+
+            if len(
+
+                score
+
+            ) > 0:
+
+                scores.append(
+
+                    score[0][2]
+
+                )
+
+        except:
+
+            continue
 
 
-        if len(score) == 0:
+    if len(
 
-            return 0
+        scores
 
-
-        return round(
-
-            score[0][2],
-
-            4
-
-        )
-
-    except:
+    ) == 0:
 
         return 0
+
+
+    return round(
+
+        float(
+
+            np.mean(
+
+                scores
+
+            )
+
+        ),
+
+        4
+
+    )
 
 
 
@@ -123,63 +188,91 @@ def preferential_attachment_score(
 
     graph,
 
-    u,
-
-    v
+    edge_pairs
 
 ):
 
-    try:
-
-        if (
-
-            u not in graph
-
-            or
-
-            v not in graph
-
-        ):
-
-            return 0
+    scores = []
 
 
-        score = list(
+    for u, v in edge_pairs:
 
-            nx.preferential_attachment(
+        try:
 
-                graph,
+            if (
 
-                [
+                u not in graph
 
-                    (
+                or
 
-                        u,
+                v not in graph
 
-                        v
+            ):
 
-                    )
+                continue
 
-                ]
+
+            score = list(
+
+                nx.preferential_attachment(
+
+                    graph,
+
+                    [
+
+                        (
+
+                            u,
+
+                            v
+
+                        )
+
+                    ]
+
+                )
 
             )
 
-        )
+
+            if len(
+
+                score
+
+            ) > 0:
+
+                scores.append(
+
+                    score[0][2]
+
+                )
+
+        except:
+
+            continue
 
 
-        if len(score) == 0:
+    if len(
 
-            return 0
+        scores
 
-
-        return round(
-
-            score[0][2],
-
-            4
-
-        )
-
-    except:
+    ) == 0:
 
         return 0
+
+
+    return round(
+
+        float(
+
+            np.mean(
+
+                scores
+
+            )
+
+        ),
+
+        4
+
+    )

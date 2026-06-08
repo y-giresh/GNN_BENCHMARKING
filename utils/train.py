@@ -1,6 +1,13 @@
 import torch
 import torch.nn.functional as F
 
+from sklearn.metrics import (
+
+    roc_auc_score
+
+)
+
+
 
 def train(
 
@@ -78,38 +85,23 @@ def train(
 
         with torch.no_grad():
 
-            pred = (
+            try:
 
-                out.argmax(
+                val_out = model(
 
-                    dim=1
+                    data.x,
 
-                )
-
-            )
-
-
-            train_acc = (
-
-                (
-
-                    pred[
-                        data.train_mask
-                    ]
-
-                    ==
-
-                    data.y[
-                        data.train_mask
-                    ]
+                    data.edge_index
 
                 )
 
-                .float()
+            except TypeError:
 
-                .mean()
+                val_out = model(
 
-            )
+                    data
+
+                )
 
 
             if hasattr(
@@ -119,25 +111,6 @@ def train(
                 "val_mask"
 
             ):
-
-                try:
-
-                    val_out = model(
-
-                        data.x,
-
-                        data.edge_index
-
-                    )
-
-                except TypeError:
-
-                    val_out = model(
-
-                        data
-
-                    )
-
 
                 val_loss = (
 
@@ -157,11 +130,7 @@ def train(
 
             else:
 
-                val_loss = (
-
-                    loss
-
-                )
+                val_loss = loss
 
 
         model.train()
@@ -169,14 +138,9 @@ def train(
 
         if val_loss < best_val:
 
-            best_val = (
-
-                val_loss
-
-            )
+            best_val = val_loss
 
             wait = 0
-
 
         else:
 
@@ -203,8 +167,6 @@ def train(
                 f"Epoch {epoch}"
 
                 f" | Loss {loss:.4f}"
-
-                f" | Train {train_acc:.4f}"
 
                 f" | Val {val_loss:.4f}"
 
@@ -248,13 +210,21 @@ def train_link(
 
     train_data,
 
+    val_data,
+
     optimizer,
 
-    epochs=200
+    epochs=200,
+
+    patience=20
 
 ):
 
-    model.train()
+    best_auc = 0
+
+    wait = 0
+
+    best_state = None
 
 
     for epoch in range(
@@ -263,7 +233,10 @@ def train_link(
 
     ):
 
+        model.train()
+
         optimizer.zero_grad()
+
 
         try:
 
@@ -289,8 +262,11 @@ def train_link(
             z,
 
             train_data.edge_label_index[
+
                 :,
+
                 train_data.edge_label == 1
+
             ]
 
         )
@@ -301,8 +277,11 @@ def train_link(
             z,
 
             train_data.edge_label_index[
+
                 :,
+
                 train_data.edge_label == 0
+
             ]
 
         )
@@ -344,6 +323,117 @@ def train_link(
         optimizer.step()
 
 
+        model.eval()
+
+
+        with torch.no_grad():
+
+            try:
+
+                z_val = model(
+
+                    val_data.x,
+
+                    val_data.edge_index
+
+                )
+
+            except TypeError:
+
+                z_val = model(
+
+                    val_data
+
+                )
+
+
+            val_pred = decode(
+
+                z_val,
+
+                val_data.edge_label_index
+
+            )
+
+
+            val_prob = (
+
+                torch.sigmoid(
+
+                    val_pred
+
+                )
+
+                .cpu()
+
+            )
+
+
+            val_true = (
+
+                val_data.edge_label
+
+                .cpu()
+
+            )
+
+
+            val_auc = (
+
+                roc_auc_score(
+
+                    val_true,
+
+                    val_prob
+
+                )
+
+            )
+
+
+        if val_auc > best_auc:
+
+            best_auc = val_auc
+
+            wait = 0
+
+
+            best_state = (
+
+                {
+
+                    k:
+
+                    v.cpu()
+
+                    for k, v
+
+                    in model.state_dict()
+
+                    .items()
+
+                }
+
+            )
+
+        else:
+
+            wait += 1
+
+
+        if wait >= patience:
+
+            print()
+
+            print(
+
+                f"Link Early stopping at epoch {epoch}"
+
+            )
+
+            break
+
+
         if epoch % 20 == 0:
 
             print(
@@ -352,7 +442,18 @@ def train_link(
 
                 f" | Loss {loss:.4f}"
 
+                f" | Val_AUC {val_auc:.4f}"
+
             )
+
+
+    if best_state is not None:
+
+        model.load_state_dict(
+
+            best_state
+
+        )
 
 
 

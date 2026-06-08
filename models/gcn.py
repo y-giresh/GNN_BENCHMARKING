@@ -5,7 +5,9 @@ from torch_geometric.nn import (
 
     GCNConv,
 
-    BatchNorm
+    BatchNorm,
+
+    global_mean_pool
 
 )
 
@@ -33,11 +35,7 @@ class GCN(
         super().__init__()
 
 
-        self.dropout = (
-
-            dropout
-
-        )
+        self.dropout = dropout
 
 
         self.conv1 = GCNConv(
@@ -57,6 +55,15 @@ class GCN(
 
 
         self.conv2 = GCNConv(
+
+            hidden_dim,
+
+            hidden_dim
+
+        )
+
+
+        self.classifier = torch.nn.Linear(
 
             hidden_dim,
 
@@ -122,18 +129,18 @@ class GCN(
 
         if batch is not None:
 
-            from torch_geometric.nn import (
-
-                global_mean_pool
-
-            )
-
-
             x = global_mean_pool(
 
                 x,
 
                 batch
+
+            )
+
+
+            x = self.classifier(
+
+                x
 
             )
 

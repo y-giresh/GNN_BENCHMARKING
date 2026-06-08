@@ -385,6 +385,8 @@ def evaluate_graph(
 
     y_pred = []
 
+    y_prob = []
+
 
     with torch.no_grad():
 
@@ -397,6 +399,19 @@ def evaluate_graph(
                 batch.edge_index,
 
                 batch.batch
+
+            )
+
+
+            prob = (
+
+                torch.softmax(
+
+                    out,
+
+                    dim=1
+
+                )
 
             )
 
@@ -434,6 +449,17 @@ def evaluate_graph(
             )
 
 
+            y_prob.extend(
+
+                prob
+
+                .cpu()
+
+                .numpy()
+
+            )
+
+
     y_true = np.array(
 
         y_true
@@ -444,6 +470,13 @@ def evaluate_graph(
     y_pred = np.array(
 
         y_pred
+
+    )
+
+
+    y_prob = np.array(
+
+        y_prob
 
     )
 
@@ -472,6 +505,29 @@ def evaluate_graph(
     )
 
 
+    try:
+
+        roc = round(
+
+            roc_auc_score(
+
+                y_true,
+
+                y_prob,
+
+                multi_class="ovr"
+
+            ),
+
+            4
+
+        )
+
+    except:
+
+        roc = 0
+
+
     return {
 
         "Accuracy":
@@ -489,6 +545,7 @@ def evaluate_graph(
             4
 
         ),
+
 
         "Precision":
 
@@ -510,6 +567,7 @@ def evaluate_graph(
 
         ),
 
+
         "Recall":
 
         round(
@@ -530,6 +588,7 @@ def evaluate_graph(
 
         ),
 
+
         "F1":
 
         round(
@@ -548,6 +607,11 @@ def evaluate_graph(
 
             4
 
-        )
+        ),
+
+
+        "ROC_AUC":
+
+        roc
 
     }

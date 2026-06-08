@@ -219,7 +219,7 @@ elif task == "link":
     )
 
 
-    graph = nx.Graph()
+    graph = nx.DiGraph()
 
     edges = (
 
@@ -296,57 +296,87 @@ elif task == "link":
         )
 
 
-    acc["Common_Neighbors"] = (
+    labels = (
 
-        float(
+        test_data.edge_label
 
-            common_neighbors_score(
+        .cpu()
 
-                graph,
+        .numpy()
 
-                edge_pairs
+    )
 
-            )
+
+    cn = (
+
+        common_neighbors_score(
+
+            graph,
+
+            edge_pairs,
+
+            labels
 
         )
 
     )
 
 
-    acc["Adamic_Adar"] = (
+    aa = (
 
-        float(
+        adamic_adar_score(
 
-            adamic_adar_score(
+            graph,
 
-                graph,
+            edge_pairs,
 
-                edge_pairs
-
-            )
+            labels
 
         )
 
     )
 
 
-    acc["Preferential_Attachment"] = (
+    pa = (
 
-        float(
+        preferential_attachment_score(
 
-            preferential_attachment_score(
+            graph,
 
-                graph,
+            edge_pairs,
 
-                edge_pairs
-
-            )
+            labels
 
         )
 
     )
 
 
+    for k, v in cn.items():
+
+        acc[
+
+            f"CN_{k}"
+
+        ] = v
+
+
+    for k, v in aa.items():
+
+        acc[
+
+            f"AA_{k}"
+
+        ] = v
+
+
+    for k, v in pa.items():
+
+        acc[
+
+            f"PA_{k}"
+
+        ] = v
 elif task == "graph":
 
     from tasks.graph_classification import (
@@ -386,6 +416,8 @@ elif task == "graph":
     fold_recall = []
 
     fold_f1 = []
+     
+    fold_roc = []
 
 
     for fold_num, (
@@ -486,6 +518,14 @@ elif task == "graph":
             result["F1"]
 
         )
+        
+        if result["ROC_AUC"] is not None:
+
+          fold_roc.append(
+
+             result["ROC_AUC"]
+
+             )
 
 
         print(
@@ -497,56 +537,128 @@ elif task == "graph":
 
     acc = {
 
-        "Accuracy":
+    "Accuracy_Mean":
 
-        f"{round(np.mean(fold_acc),4)} ± {round(np.std(fold_acc),4)}",
+    round(
+
+        float(
+
+            np.mean(
+
+                fold_acc
+
+            )
+
+        ),
+
+        4
+
+    ),
 
 
-        "Precision":
+    "Accuracy_Std":
 
-        round(
+    round(
+
+        float(
+
+            np.std(
+
+                fold_acc
+
+            )
+
+        ),
+
+        4
+
+    ),
+
+
+    "Precision":
+
+    round(
+
+        float(
 
             np.mean(
 
                 fold_precision
 
-            ),
-
-            4
+            )
 
         ),
 
+        4
 
-        "Recall":
+    ),
 
-        round(
+
+    "Recall":
+
+    round(
+
+        float(
 
             np.mean(
 
                 fold_recall
 
-            ),
-
-            4
+            )
 
         ),
 
+        4
 
-        "F1":
+    ),
 
-        round(
+
+    "F1":
+
+    round(
+
+        float(
 
             np.mean(
 
                 fold_f1
 
-            ),
+            )
 
-            4
+        ),
+
+        4
+
+    ),
+
+
+    "ROC_AUC":
+
+round(
+
+    float(
+
+        np.mean(
+
+            fold_roc
 
         )
 
-    }
+    ),
+
+    4
+
+)
+
+if len(
+
+    fold_roc
+
+) > 0
+
+else "NA",
+
+}
 
 
 else:

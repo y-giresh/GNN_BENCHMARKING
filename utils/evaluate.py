@@ -9,7 +9,13 @@ from sklearn.metrics import (
 
     average_precision_score,
 
-    confusion_matrix
+    confusion_matrix,
+
+    accuracy_score,
+
+    precision_score,
+
+    recall_score
 
 )
 
@@ -442,25 +448,6 @@ def evaluate_graph(
     )
 
 
-    acc = round(
-
-        (
-
-            y_true
-
-            ==
-
-            y_pred
-
-        )
-
-        .mean(),
-
-        4
-
-    )
-
-
     cm = confusion_matrix(
 
         y_true,
@@ -489,6 +476,78 @@ def evaluate_graph(
 
         "Accuracy":
 
-        acc
+        round(
+
+            accuracy_score(
+
+                y_true,
+
+                y_pred
+
+            ),
+
+            4
+
+        ),
+
+        "Precision":
+
+        round(
+
+            precision_score(
+
+                y_true,
+
+                y_pred,
+
+                average="macro",
+
+                zero_division=0
+
+            ),
+
+            4
+
+        ),
+
+        "Recall":
+
+        round(
+
+            recall_score(
+
+                y_true,
+
+                y_pred,
+
+                average="macro",
+
+                zero_division=0
+
+            ),
+
+            4
+
+        ),
+
+        "F1":
+
+        round(
+
+            f1_score(
+
+                y_true,
+
+                y_pred,
+
+                average="macro",
+
+                zero_division=0
+
+            ),
+
+            4
+
+        )
 
     }

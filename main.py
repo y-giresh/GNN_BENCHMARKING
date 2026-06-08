@@ -350,28 +350,42 @@ elif task == "link":
 elif task == "graph":
 
     from tasks.graph_classification import (
+
         load_graph_dataset
+
     )
 
     from utils.train import (
+
         train_graph
+
     )
 
     from utils.evaluate import (
+
         evaluate_graph
+
     )
 
 
     dataset, fold_loaders = (
 
         load_graph_dataset(
+
             dataset_name
+
         )
 
     )
 
 
-    fold_scores = []
+    fold_acc = []
+
+    fold_precision = []
+
+    fold_recall = []
+
+    fold_f1 = []
 
 
     for fold_num, (
@@ -446,19 +460,37 @@ elif task == "graph":
         )
 
 
-        score = result["Accuracy"]
+        fold_acc.append(
+
+            result["Accuracy"]
+
+        )
 
 
-        fold_scores.append(
+        fold_precision.append(
 
-            score
+            result["Precision"]
+
+        )
+
+
+        fold_recall.append(
+
+            result["Recall"]
+
+        )
+
+
+        fold_f1.append(
+
+            result["F1"]
 
         )
 
 
         print(
 
-            f"Fold Accuracy: {score:.4f}"
+            f"Fold Accuracy: {result['Accuracy']:.4f}"
 
         )
 
@@ -467,7 +499,52 @@ elif task == "graph":
 
         "Accuracy":
 
-        f"{round(np.mean(fold_scores),4)} ± {round(np.std(fold_scores),4)}"
+        f"{round(np.mean(fold_acc),4)} ± {round(np.std(fold_acc),4)}",
+
+
+        "Precision":
+
+        round(
+
+            np.mean(
+
+                fold_precision
+
+            ),
+
+            4
+
+        ),
+
+
+        "Recall":
+
+        round(
+
+            np.mean(
+
+                fold_recall
+
+            ),
+
+            4
+
+        ),
+
+
+        "F1":
+
+        round(
+
+            np.mean(
+
+                fold_f1
+
+            ),
+
+            4
+
+        )
 
     }
 

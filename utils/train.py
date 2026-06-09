@@ -188,6 +188,15 @@ def train(
                 f" | Val {val_loss:.4f}"
 
             )
+        
+    if best_state is not None:
+
+     model.load_state_dict(
+
+         best_state
+
+     )
+            
 
 
 

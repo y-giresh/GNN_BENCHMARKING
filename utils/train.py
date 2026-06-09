@@ -30,6 +30,9 @@ def train(
     )
 
     wait = 0
+    
+    
+    best_state = None
 
 
     model.train()
@@ -138,9 +141,23 @@ def train(
 
         if val_loss < best_val:
 
-            best_val = val_loss
+         best_val = val_loss
 
-            wait = 0
+         wait = 0
+
+         best_state = {
+
+         k:
+
+         v.cpu()
+
+         for k, v
+
+         in model.state_dict()
+
+         .items()
+
+        }
 
         else:
 
@@ -527,3 +544,11 @@ def train_graph(
                 f" | Loss {total_loss:.4f}"
 
             )
+        
+        if best_state is not None:
+
+             model.load_state_dict(
+
+                 best_state
+
+             )

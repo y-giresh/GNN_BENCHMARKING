@@ -310,9 +310,35 @@ def evaluate_link(
         )
 
 
+        k = min(
+
+            10,
+
+            len(
+
+                prob
+
+            )
+
+        )
+
+
+        top_k = torch.topk(
+
+            prob,
+
+            k
+
+        ).indices
+
+
         hits = (
 
-            pred
+            y_true[
+
+                top_k
+
+            ]
 
             .float()
 

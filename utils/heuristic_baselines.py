@@ -159,23 +159,38 @@ def common_neighbors_score(
 
         try:
 
-            score = len(
+            out_u = set(
 
-                list(
+                graph.successors(
 
-                    nx.common_neighbors(
-
-                        graph,
-
-                        u,
-
-                        v
-
-                    )
+                    u
 
                 )
 
             )
+
+
+            in_v = set(
+
+                graph.predecessors(
+
+                    v
+
+                )
+
+            )
+
+
+            score = len(
+
+                out_u
+
+                &
+
+                in_v
+
+            )
+
 
         except:
 
@@ -199,7 +214,6 @@ def common_neighbors_score(
 
 
 
-
 def adamic_adar_score(
 
     graph,
@@ -214,43 +228,65 @@ def adamic_adar_score(
 
 
     for u, v in edge_pairs:
-
+          
         try:
 
-            value = list(
+            out_u = set(
 
-                nx.adamic_adar_index(
+                graph.successors(
 
-                    graph,
-
-                    [
-
-                        (
-
-                            u,
-
-                            v
-
-                        )
-
-                    ]
+                    u
 
                 )
 
             )
 
 
-            if len(
+            in_v = set(
 
-                value
+                graph.predecessors(
 
-            ) > 0:
+                    v
 
-                score = value[0][2]
+                )
 
-            else:
+            )
 
-                score = 0
+
+            common = (
+
+                out_u
+
+                &
+
+                in_v
+
+            )
+
+
+            score = sum(
+
+                1
+
+                /
+
+                np.log(
+
+                    graph.in_degree(
+
+                        n
+
+                    )
+
+                    +
+
+                    1
+
+                )
+
+                for n in common
+
+            )
 
 
         except:
@@ -263,7 +299,6 @@ def adamic_adar_score(
             score
 
         )
-
 
     return evaluate_scores(
 
@@ -293,41 +328,23 @@ def preferential_attachment_score(
 
         try:
 
-            value = list(
+            score = (
 
-                nx.preferential_attachment(
+                graph.out_degree(
 
-                    graph,
+                    u
 
-                    [
+                )
 
-                        (
+                *
 
-                            u,
+                graph.in_degree(
 
-                            v
-
-                        )
-
-                    ]
+                    v
 
                 )
 
             )
-
-
-            if len(
-
-                value
-
-            ) > 0:
-
-                score = value[0][2]
-
-            else:
-
-                score = 0
-
 
         except:
 

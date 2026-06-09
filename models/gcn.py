@@ -34,7 +34,6 @@ class GCN(
 
         super().__init__()
 
-
         self.dropout = dropout
 
 
@@ -138,11 +137,11 @@ class GCN(
             )
 
 
-            x = self.classifier(
+        x = self.classifier(
 
-                x
+            x
 
-            )
+        )
 
 
         return x

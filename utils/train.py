@@ -494,13 +494,23 @@ def train_graph(
 
     optimizer,
 
-    epochs=50
+    epochs=50,
+    
+    patience=20
 
 ):
 
     model.train()
 
+    best_val = float(
 
+        "inf"
+
+    )
+
+    wait = 0
+
+    best_state = None
     for epoch in range(
 
         epochs
@@ -545,7 +555,81 @@ def train_graph(
 
             )
 
+            model.eval()
 
+
+        val_loss = 0
+
+
+        with torch.no_grad():
+
+            for batch in val_loader:
+
+                out = model(
+
+                    batch.x,
+
+                    batch.edge_index,
+
+                    batch.batch
+
+                )
+
+
+                val_loss += (
+
+                    F.cross_entropy(
+
+                        out,
+
+                        batch.y
+
+                    )
+
+                    .item()
+
+                )
+
+
+        model.train()
+
+
+        if val_loss < best_val:
+
+            best_val = val_loss
+
+            wait = 0
+
+
+            best_state = {
+
+                k:
+
+                v.cpu()
+
+                for k, v
+
+                in model.state_dict()
+
+                .items()
+
+            }
+
+
+        else:
+
+            wait += 1
+
+
+        if wait >= patience:
+
+            print(
+
+                f"Graph Early stopping at epoch {epoch}"
+
+            )
+
+            break
         if epoch % 10 == 0:
 
             print(
@@ -555,5 +639,11 @@ def train_graph(
                 f" | Loss {total_loss:.4f}"
 
             )
-        
+        if best_state is not None:
+
+          model.load_state_dict(
+
+          best_state
+
+        )
        

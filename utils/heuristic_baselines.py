@@ -77,6 +77,19 @@ def evaluate_scores(
     )
 
 
+    k = max(1, int(0.1 * len(scores)))
+
+    top_k_indices = np.argsort(scores)[::-1][:k]
+
+    hits_at_k = round(
+
+        float(labels[top_k_indices].mean()),
+
+        4
+
+    )
+
+
     return {
 
         "AUC":
@@ -129,13 +142,7 @@ def evaluate_scores(
 
         "Hits@K":
 
-        round(
-
-            pred.mean(),
-
-            4
-
-        )
+        hits_at_k
 
     }
 

@@ -4,6 +4,7 @@ from torch_geometric.loader import DataLoader
 
 from sklearn.model_selection import KFold
 
+import torch
 
 
 def load_graph_dataset(
@@ -70,7 +71,7 @@ def load_graph_dataset(
 
         )
 
-        from torch.utils.data import random_split
+      
 
 
         train_size = int(
@@ -103,19 +104,50 @@ def load_graph_dataset(
         )
 
 
-        train_dataset, val_dataset = random_split(
+        indices = torch.randperm(
 
-            train_dataset,
+          len(
 
-            [
+              train_dataset
 
-                train_size,
-
-                val_size
-
-            ]
+            )
 
         )
+
+
+        original_train = train_dataset
+
+
+        train_indices = indices[
+
+              :train_size
+
+        ]
+
+
+        val_indices = indices[
+
+         train_size:
+
+         ]
+
+
+        train_dataset = [
+
+          original_train[i]
+
+          for i in train_indices
+
+        ]
+
+
+        val_dataset = [
+
+          original_train[i]
+
+          for i in val_indices
+
+        ]   
         train_loader = DataLoader(
 
             train_dataset,

@@ -639,11 +639,11 @@ def train_graph(
                 f" | Loss {total_loss:.4f}"
 
             )
-        if best_state is not None:
 
-          model.load_state_dict(
+    if best_state is not None:
 
-          best_state
+        model.load_state_dict(
+
+            best_state
 
         )
-       

@@ -96,6 +96,21 @@ class GIN(
             mlp2
 
         )
+        
+        self.bn2 = BatchNorm(
+
+          output_dim
+
+         ) 
+
+
+        self.classifier = torch.nn.Linear(
+
+          output_dim,
+
+          output_dim
+
+        )
 
 
     def forward(
@@ -151,17 +166,48 @@ class GIN(
             edge_index
 
         )
+        
+        x = self.bn2(
+
+         x
+
+        )
+
+
+        x = F.relu(
+
+         x
+
+        )
+
+
+        x = F.dropout(
+
+           x,
+
+          p=self.dropout,
+
+         training=self.training
+
+        )
 
 
         if batch is not None:
 
-            x = global_mean_pool(
+         x = global_mean_pool(
 
-                x,
+         x,
 
-                batch
+         batch
 
-            )
+        )
 
+
+        x = self.classifier(
+
+           x
+
+        )
+ 
 
         return x

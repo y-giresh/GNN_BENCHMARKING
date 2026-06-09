@@ -423,7 +423,7 @@ elif task == "graph":
     for fold_num, (
 
         train_loader,
-
+        val_loader,
         test_loader
 
     ) in enumerate(
@@ -475,6 +475,7 @@ elif task == "graph":
             model,
 
             train_loader,
+            val_loader,
 
             optimizer,
 

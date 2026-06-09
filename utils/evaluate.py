@@ -529,35 +529,50 @@ def evaluate_graph(
         cm
 
     )
-
-
     try:
 
-        roc = round(
+        if y_prob.shape[1] == 2:
 
-            roc_auc_score(
+            roc = round(
 
-                y_true,
+                roc_auc_score(
 
-                y_prob,
+                    y_true,
 
-                multi_class="ovr"
+                    y_prob[:, 1]
 
-            ),
+                ),
 
-            4
+                4
 
-        )
+            )
+
+        else:
+
+            roc = round(
+
+                roc_auc_score(
+
+                    y_true,
+
+                    y_prob,
+
+                    multi_class="ovr"
+
+                ),
+
+                4
+
+            )
 
     except:
 
-        roc = 0
+        roc = None
 
 
     return {
 
         "Accuracy":
-
         round(
 
             accuracy_score(

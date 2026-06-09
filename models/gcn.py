@@ -60,6 +60,12 @@ class GCN(
             hidden_dim
 
         )
+        
+        self.bn2 = BatchNorm(
+
+           hidden_dim
+
+        )
 
 
         self.classifier = torch.nn.Linear(
@@ -116,12 +122,36 @@ class GCN(
 
         )
 
-
         x = self.conv2(
 
             x,
 
             edge_index
+
+        )
+
+
+        x = self.bn2(
+
+            x
+
+        )
+
+
+        x = F.relu(
+
+            x
+
+        )
+
+
+        x = F.dropout(
+
+            x,
+
+            p=self.dropout,
+
+            training=self.training
 
         )
 

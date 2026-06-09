@@ -70,7 +70,52 @@ def load_graph_dataset(
 
         )
 
+        from torch.utils.data import random_split
 
+
+        train_size = int(
+
+            0.8
+
+            *
+
+            len(
+
+                train_dataset
+
+            )
+
+        )
+
+
+        val_size = (
+
+            len(
+
+                train_dataset
+
+            )
+
+            -
+
+            train_size
+
+        )
+
+
+        train_dataset, val_dataset = random_split(
+
+            train_dataset,
+
+            [
+
+                train_size,
+
+                val_size
+
+            ]
+
+        )
         train_loader = DataLoader(
 
             train_dataset,
@@ -78,6 +123,15 @@ def load_graph_dataset(
             batch_size=batch_size,
 
             shuffle=True
+
+        )
+        val_loader = DataLoader(
+
+            val_dataset,
+
+            batch_size=batch_size,
+
+            shuffle=False
 
         )
 
@@ -98,6 +152,7 @@ def load_graph_dataset(
             (
 
                 train_loader,
+                val_loader,
 
                 test_loader
 

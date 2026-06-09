@@ -280,7 +280,7 @@ def adamic_adar_score(
 
                     +
 
-                    1
+                    2
 
                 )
 

@@ -488,7 +488,9 @@ def train_graph(
 
     model,
 
-    loader,
+    train_loader,
+
+    val_loader,
 
     optimizer,
 
@@ -508,7 +510,7 @@ def train_graph(
         total_loss = 0
 
 
-        for batch in loader:
+        for batch in train_loader:
 
             optimizer.zero_grad()
 
@@ -554,10 +556,4 @@ def train_graph(
 
             )
         
-        if best_state is not None:
-
-             model.load_state_dict(
-
-                 best_state
-
-             )
+       

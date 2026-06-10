@@ -86,6 +86,16 @@ class GIN(
 
                 hidden_dim
 
+            ),
+
+            ReLU(),
+
+            Linear(
+
+                hidden_dim,
+
+                hidden_dim
+
             )
 
         )

@@ -7,7 +7,7 @@ import random
 import numpy as np
 import networkx as nx
 
-from tasks import get_dataset
+from tasks import get_dataset, create_split
 from models import get_model
 
 from utils.train import train
@@ -102,6 +102,10 @@ if task == "node":
 
     dataset = get_dataset(
         dataset_name
+    )
+
+    dataset = create_split(
+        dataset
     )
 
     data = dataset[0]

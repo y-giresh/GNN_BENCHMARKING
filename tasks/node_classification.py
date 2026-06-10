@@ -11,26 +11,28 @@ def load_dataset():
     return dataset
 
 
-dataset = load_dataset()
+if __name__ == "__main__":
 
-data = dataset[0]
+    dataset = load_dataset()
 
-print(dataset)
+    data = dataset[0]
 
-print("Number of classes:", dataset.num_classes)
+    print(dataset)
 
-print("Number of features:", dataset.num_features)
+    print("Number of classes:", dataset.num_classes)
 
-print()
+    print("Number of features:", dataset.num_features)
 
-print(data)
+    print()
 
-print("Nodes:", data.num_nodes)
+    print(data)
 
-print("Edges:", data.num_edges)
+    print("Nodes:", data.num_nodes)
 
-print("Training nodes:", data.train_mask.sum().item())
+    print("Edges:", data.num_edges)
 
-print("Validation nodes:", data.val_mask.sum().item())
+    print("Training nodes:", data.train_mask.sum().item())
 
-print("Testing nodes:", data.test_mask.sum().item())
+    print("Validation nodes:", data.val_mask.sum().item())
+
+    print("Testing nodes:", data.test_mask.sum().item())

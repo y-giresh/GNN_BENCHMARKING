@@ -34,6 +34,9 @@ class GAT(
 
         super().__init__()
 
+        assert hidden_dim % 8 == 0, (
+            f"GAT requires hidden_dim divisible by 8 (got {hidden_dim})"
+        )
 
         self.dropout = dropout
 

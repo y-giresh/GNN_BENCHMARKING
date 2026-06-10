@@ -225,6 +225,16 @@ elif task == "link":
 
     graph = nx.Graph()
 
+    graph.add_nodes_from(
+
+        range(
+
+            dataset[0].num_nodes
+
+        )
+
+    )
+
     edges = (
 
         train_data.edge_index
@@ -655,11 +665,7 @@ round(
 
 )
 
-if len(
-
-    fold_roc
-
-) > 0
+if fold_roc
 
 else "NA",
 

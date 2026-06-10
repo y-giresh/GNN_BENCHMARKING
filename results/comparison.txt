@@ -1,287 +1,55 @@
 BENCHMARK SUMMARY
 
+=== NODE CLASSIFICATION ===
 
-Task: node
-Model: gcn
-Dataset: cora
-Accuracy: 0.8110
+Task     Model  Dataset Hidden    LR Dropout Weight_Decay Epochs Accuracy Macro_F1 Weighted_F1 Training_Time Parameters Memory_MB
+node       gcn     cora     32  0.01     0.5       0.0005    200    0.676   0.6765      0.6735          0.91      47303    387.28
+node       gat     cora     32  0.01     0.5       0.0005    200    0.719   0.7096      0.7215          1.39      47431    399.02
+node graphsage     cora     32  0.01     0.5       0.0005    200    0.729   0.7188       0.731          1.84      94183    482.79
+node       gin     cora     32  0.01     0.5       0.0005    200    0.632    0.625       0.642          2.32      49415    470.29
+node       gcn citeseer     32  0.01     0.5       0.0005    200    0.539   0.5271      0.5558          1.27     119910    420.46
+node       gat citeseer     32  0.01     0.5       0.0005    200    0.517   0.5157      0.5439          2.51     120038    432.82
+node graphsage citeseer     32  0.01     0.5       0.0005    200    0.507   0.5151      0.5429          5.09     239430    662.52
+node       gin citeseer     32  0.01     0.5       0.0005    200    0.438   0.4258      0.4525           4.6     120966    609.23
+node       gcn   pubmed     32  0.01     0.5       0.0005    200    0.695   0.6883      0.6938          5.08      17315    478.27
+node       gat   pubmed     32  0.01     0.5       0.0005    200    0.715   0.7049      0.7153          8.52      17443    532.42
+node graphsage   pubmed     32  0.01     0.5       0.0005    200    0.679   0.6708      0.6749          8.01      34339    703.55
+node       gin   pubmed     32  0.01     0.5       0.0005    200    0.568   0.5578      0.5679          5.86      18371    656.66
 
-Task: node
-Model: gat
-Dataset: cora
-Accuracy: 0.7840
+=== LINK CLASSIFICATION ===
 
-Task: node
-Model: graphsage
-Dataset: pubmed
-Accuracy: 0.7660
+Task     Model  Dataset Hidden    LR Dropout Weight_Decay Epochs     AUC Average_Precision      F1  Hits@K  CN_AUC CN_Average_Precision   CN_F1 CN_Hits@K  AA_AUC AA_Average_Precision   AA_F1 AA_Hits@K  PA_AUC PA_Average_Precision   PA_F1 PA_Hits@K Training_Time Parameters Memory_MB
+link       gcn     cora     32  0.01     0.5       0.0005    200  0.7826             0.783  0.7329  0.8957  0.6561               0.6551  0.6667    0.9953  0.6562               0.6559  0.6667    0.9905  0.6256               0.6749  0.6083     0.891          0.95      48128    397.74
+link       gat     cora     32  0.01     0.5       0.0005    200  0.7657            0.7496  0.7185     0.9  0.6561               0.6551  0.6667    0.9953  0.6562               0.6559  0.6667    0.9905  0.6256               0.6749  0.6083     0.891          1.95      48256    405.71
+link graphsage     cora     32  0.01     0.5       0.0005    200  0.7931            0.7788  0.7519       1  0.6561               0.6551  0.6667    0.9953  0.6562               0.6559  0.6667    0.9905  0.6256               0.6749  0.6083     0.891          1.79      95008    481.73
+link       gin     cora     32  0.01     0.5       0.0005    200  0.7814            0.8025  0.7226       1  0.6561               0.6551  0.6667    0.9953  0.6562               0.6559  0.6667    0.9905  0.6256               0.6749  0.6083     0.891          3.08      49184    464.91
+link       gcn citeseer     32  0.01     0.5       0.0005    200   0.802            0.8135  0.7424       1  0.6227               0.6212  0.6667    0.9725  0.6227                0.622  0.6667     0.989   0.586               0.6588  0.5584    0.8846          0.91     120768    429.31
+link       gat citeseer     32  0.01     0.5       0.0005    200  0.7849            0.8048  0.7184       1  0.6227               0.6212  0.6667    0.9725  0.6227                0.622  0.6667     0.989   0.586               0.6588  0.5584    0.8846          1.05     120896    436.04
+link graphsage citeseer     32  0.01     0.5       0.0005    200  0.7574            0.7369  0.7203       1  0.6227               0.6212  0.6667    0.9725  0.6227                0.622  0.6667     0.989   0.586               0.6588  0.5584    0.8846          4.43     240288    634.96
+link       gin citeseer     32  0.01     0.5       0.0005    200   0.716            0.7149   0.702       1  0.6227               0.6212  0.6667    0.9725  0.6227                0.622  0.6667     0.989   0.586               0.6588  0.5584    0.8846          4.06     121824     622.8
+link       gcn   pubmed     32  0.01     0.5       0.0005    200  0.9287            0.9351   0.802       1   0.619               0.6188  0.6667    0.9972  0.6191               0.6193  0.6667    0.9949  0.7202               0.7835  0.7042    0.9549          3.74      18272    516.29
+link       gat   pubmed     32  0.01     0.5       0.0005    200  0.8826            0.8771  0.7787     0.9   0.619               0.6188  0.6667    0.9972  0.6191               0.6193  0.6667    0.9949  0.7202               0.7835  0.7042    0.9549          8.55      18400    572.59
+link graphsage   pubmed     32  0.01     0.5       0.0005    200  0.8569            0.8622  0.7664     0.9   0.619               0.6188  0.6667    0.9972  0.6191               0.6193  0.6667    0.9949  0.7202               0.7835  0.7042    0.9549          7.19      35296    688.35
+link       gin   pubmed     32  0.01     0.5       0.0005    200  0.7462            0.8159   0.662       1   0.619               0.6188  0.6667    0.9972  0.6191               0.6193  0.6667    0.9949  0.7202               0.7835  0.7042    0.9549          3.33      19328    642.26
 
-Task: node
-Model: gin
-Dataset: citeseer
-Accuracy: 0.6310
+=== GRAPH CLASSIFICATION ===
 
-Task: link
-Model: gcn
-Dataset: cora
-Accuracy: 0.6749
+ Task     Model  Dataset Hidden    LR Dropout Weight_Decay Epochs Accuracy_Mean Accuracy_Std Precision  Recall      F1 ROC_AUC Training_Time Parameters Memory_MB
+graph       gcn    mutag     32  0.01     0.5       0.0005    200        0.7126       0.0801    0.7074    0.64  0.6413       0         54.94       1442    361.19
+graph       gat    mutag     32  0.01     0.5       0.0005    200        0.7442       0.0958     0.713  0.6755  0.6603       0         75.78       3590    379.25
+graph graphsage    mutag     32  0.01     0.5       0.0005    200        0.7602       0.0839    0.7622  0.7097   0.707       0         37.05        674    360.05
+graph       gin    mutag     32  0.01     0.5       0.0005    200        0.7719       0.1001    0.8004  0.7539  0.7347       0         38.24       1442    359.85
+graph       gcn proteins     32  0.01     0.5       0.0005    200        0.6811       0.0662    0.6841  0.6476  0.6414       0        442.15       1314    409.09
+graph       gat proteins     32  0.01     0.5       0.0005    200        0.6793       0.0508    0.6714  0.6658  0.6621       0        680.65       2566    465.77
+graph graphsage proteins     32  0.01     0.5       0.0005    200        0.6766       0.0606    0.6723   0.641  0.6419       0        247.66        418    397.34
+graph       gin proteins     32  0.01     0.5       0.0005    200        0.6829       0.0396    0.6771  0.6658  0.6629       0        327.42       1314    400.48
+graph       gcn  enzymes     32  0.01     0.5       0.0005    200        0.3017       0.0376    0.2957  0.2978  0.2631  0.6474        187.27       1446    382.64
+graph       gat  enzymes     32  0.01     0.5       0.0005    200        0.2667       0.0453    0.2419   0.272  0.2268  0.6255        338.44       3602    427.09
+graph graphsage  enzymes     32  0.01     0.5       0.0005    200        0.3133       0.0371    0.3022  0.3172  0.2871  0.6547        125.88        678    383.79
+graph       gin  enzymes     32  0.01     0.5       0.0005    200        0.3133       0.0452    0.3205  0.3161  0.2836  0.6689        134.89       1446    380.44
+graph       gcn     nci1     32  0.01     0.5       0.0005    200        0.6333       0.0179    0.6511  0.6324  0.6202       0       2032.45       2402    484.59
+graph       gat     nci1     32  0.01     0.5       0.0005    200        0.6078       0.0458    0.6498  0.6094   0.574       0       2936.95      11270     470.4
+graph graphsage     nci1     32  0.01     0.5       0.0005    200        0.6421       0.0254    0.6569  0.6447  0.6346       0       1240.12       2594    482.97
+graph       gin     nci1     32  0.01     0.5       0.0005    200        0.6888       0.0158    0.6952  0.6878  0.6851       0       1971.94       2402    481.18
+graph       gcn    MUTAG     32  0.01     0.5       0.0005    200        0.7237       0.0833    0.7283  0.6526  0.6497  0.7998         26.86       1506    380.63
 
-Task: link
-Model: gat
-Dataset: pubmed
-Accuracy: 0.7524
-
-Task: link
-Model: gat
-Dataset: cora
-Accuracy: 0.6995
-
-Task: link
-Model: graphsage
-Dataset: cora
-Accuracy: 0.6697
-
-Task: link
-Model: gin
-Dataset: cora
-Accuracy: 0.6768
-
-Task: graph
-Model: gcn
-Dataset: mutag
-Accuracy: 0.7447
-
-Task: graph
-Model: gat
-Dataset: mutag
-Accuracy: 0.7553
-
-Task: graph
-Model: graphsage
-Dataset: mutag
-Accuracy: 0.7660
-
-Task: graph
-Model: gin
-Dataset: mutag
-Accuracy: 0.7926
-
-Task: link
-Model: graphsage
-Dataset: citeseer
-Accuracy: 0.6769
-
-Task: graph
-Model: gcn
-Dataset: proteins
-Accuracy: 0.7447
-
-Task: graph
-Model: gcn
-Dataset: enzymes
-Accuracy: 0.7447
-
-Task: graph
-Model: gcn
-Dataset: nci1
-Accuracy: 0.7447
-
-Task: node
-Model: gcn
-Dataset: cora
-Accuracy: 0.8110
-
-Task: node
-Model: gat
-Dataset: cora
-Accuracy: 0.7840
-
-Task: node
-Model: graphsage
-Dataset: cora
-Accuracy: 0.8030
-
-Task: node
-Model: gin
-Dataset: cora
-Accuracy: 0.7570
-
-Task: node
-Model: gcn
-Dataset: citeseer
-Accuracy: 0.6850
-
-Task: node
-Model: gat
-Dataset: citeseer
-Accuracy: 0.6340
-
-Task: node
-Model: graphsage
-Dataset: citeseer
-Accuracy: 0.7010
-
-Task: node
-Model: gin
-Dataset: citeseer
-Accuracy: 0.6310
-
-Task: node
-Model: gcn
-Dataset: pubmed
-Accuracy: 0.7920
-
-Task: node
-Model: gat
-Dataset: pubmed
-Accuracy: 0.7630
-
-Task: node
-Model: graphsage
-Dataset: pubmed
-Accuracy: 0.7660
-
-Task: node
-Model: gin
-Dataset: pubmed
-Accuracy: 0.7600
-
-Task: link
-Model: gcn
-Dataset: cora
-Accuracy: 0.6550
-
-Task: link
-Model: gat
-Dataset: cora
-Accuracy: 0.7052
-
-Task: link
-Model: graphsage
-Dataset: cora
-Accuracy: 0.6829
-
-Task: link
-Model: gin
-Dataset: cora
-Accuracy: 0.6877
-
-Task: link
-Model: gcn
-Dataset: citeseer
-Accuracy: 0.6846
-
-Task: link
-Model: gat
-Dataset: citeseer
-Accuracy: 0.7170
-
-Task: link
-Model: graphsage
-Dataset: citeseer
-Accuracy: 0.6736
-
-Task: link
-Model: gin
-Dataset: citeseer
-Accuracy: 0.6879
-
-Task: link
-Model: gcn
-Dataset: pubmed
-Accuracy: 0.7411
-
-Task: link
-Model: gat
-Dataset: pubmed
-Accuracy: 0.7423
-
-Task: link
-Model: graphsage
-Dataset: pubmed
-Accuracy: 0.7096
-
-Task: link
-Model: gin
-Dataset: pubmed
-Accuracy: 0.6948
-
-Task: graph
-Model: gcn
-Dataset: mutag
-Accuracy: 0.7447
-
-Task: graph
-Model: gat
-Dataset: mutag
-Accuracy: 0.7553
-
-Task: graph
-Model: graphsage
-Dataset: mutag
-Accuracy: 0.7660
-
-Task: graph
-Model: gin
-Dataset: mutag
-Accuracy: 0.7926
-
-Task: graph
-Model: gcn
-Dataset: proteins
-Accuracy: 0.7447
-
-Task: graph
-Model: gat
-Dataset: proteins
-Accuracy: 0.7553
-
-Task: graph
-Model: graphsage
-Dataset: proteins
-Accuracy: 0.7660
-
-Task: graph
-Model: gin
-Dataset: proteins
-Accuracy: 0.7926
-
-Task: graph
-Model: gcn
-Dataset: enzymes
-Accuracy: 0.7447
-
-Task: graph
-Model: gat
-Dataset: enzymes
-Accuracy: 0.7553
-
-Task: graph
-Model: graphsage
-Dataset: enzymes
-Accuracy: 0.7660
-
-Task: graph
-Model: gin
-Dataset: enzymes
-Accuracy: 0.7926
-
-Task: graph
-Model: gcn
-Dataset: nci1
-Accuracy: 0.7447
-
-Task: graph
-Model: gat
-Dataset: nci1
-Accuracy: 0.7553
-
-Task: graph
-Model: graphsage
-Dataset: nci1
-Accuracy: 0.7660
-
-Task: graph
-Model: gin
-Dataset: nci1
-Accuracy: 0.7926

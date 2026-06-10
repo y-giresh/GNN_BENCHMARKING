@@ -310,13 +310,21 @@ def evaluate_link(
         )
 
 
-        k = min(
+        k = max(
 
-            10,
+            1,
 
-            len(
+            int(
 
-                prob
+                0.1
+
+                *
+
+                len(
+
+                    prob
+
+                )
 
             )
 

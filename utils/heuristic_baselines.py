@@ -199,7 +199,7 @@ def common_neighbors_score(
             )
 
 
-        except:
+        except Exception:
 
             score = 0
 
@@ -296,7 +296,7 @@ def adamic_adar_score(
             )
 
 
-        except:
+        except Exception:
 
             score = 0
 
@@ -354,7 +354,7 @@ def preferential_attachment_score(
 
             )
 
-        except:
+        except Exception:
 
             score = 0
 

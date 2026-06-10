@@ -196,7 +196,8 @@ def train(
          best_state
 
      )
-            
+
+     model.eval()
 
 
 
@@ -481,6 +482,8 @@ def train_link(
 
         )
 
+        model.eval()
+
 
 
 
@@ -646,3 +649,5 @@ def train_graph(
             best_state
 
         )
+
+        model.eval()

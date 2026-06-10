@@ -1,13 +1,18 @@
 import os
+import pandas as pd
 
 
 def compare_results():
 
-    source = (
+    result_files = {
 
-        "results/auto_results.txt"
+        "node": "results/node_results.xlsx",
 
-    )
+        "link": "results/link_results.xlsx",
+
+        "graph": "results/graph_results.xlsx",
+
+    }
 
     target = (
 
@@ -15,28 +20,67 @@ def compare_results():
 
     )
 
+    found_any = False
 
-    if not os.path.exists(
+    lines = [
 
-        source
+        "BENCHMARK SUMMARY\n\n"
 
-    ):
+    ]
+
+    for task, file_name in result_files.items():
+
+        if not os.path.exists(
+
+            file_name
+
+        ):
+
+            continue
+
+        found_any = True
+
+        df = pd.read_excel(
+
+            file_name,
+
+            dtype=object
+
+        )
+
+        lines.append(
+
+            f"=== {task.upper()} CLASSIFICATION ===\n\n"
+
+        )
+
+        lines.append(
+
+            df.to_string(
+
+                index=False
+
+            )
+
+        )
+
+        lines.append(
+
+            "\n\n"
+
+        )
+
+    if not found_any:
 
         return
 
+    os.makedirs(
 
-    with open(
+        "results",
 
-        source,
+        exist_ok=True
 
-        "r",
-
-        encoding="utf-8"
-
-    ) as f:
-
-        content = f.read()
-
+    )
 
     with open(
 
@@ -48,18 +92,11 @@ def compare_results():
 
     ) as f:
 
-        f.write(
+        f.writelines(
 
-            "BENCHMARK SUMMARY\n\n"
-
-        )
-
-        f.write(
-
-            content
+            lines
 
         )
-
 
     print()
 

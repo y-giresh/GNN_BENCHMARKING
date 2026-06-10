@@ -573,7 +573,7 @@ def evaluate_graph(
 
             )
 
-    except:
+    except Exception:
 
         roc = None
 

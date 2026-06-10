@@ -18,6 +18,10 @@ def create_split(
 
     data = dataset[0]
 
+    if hasattr(data, "train_mask") and data.train_mask.sum().item() > 0:
+
+        return dataset
+
     num_nodes = (
 
         data.num_nodes

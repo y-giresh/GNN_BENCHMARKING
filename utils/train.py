@@ -500,8 +500,6 @@ def train_graph(
 
 ):
 
-    model.train()
-
     best_val = float(
 
         "inf"
@@ -511,11 +509,18 @@ def train_graph(
     wait = 0
 
     best_state = None
+
     for epoch in range(
 
         epochs
 
     ):
+
+        # FIX #3: model.train() moved to the top of the epoch loop, outside
+        # the batch loop. Previously it sat INSIDE the batch loop after
+        # optimizer.step(), which called model.eval() at the start of every
+        # subsequent batch iteration, disabling dropout during training.
+        model.train()
 
         total_loss = 0
 
@@ -555,8 +560,8 @@ def train_graph(
 
             )
 
-            model.eval()
 
+        model.eval()
 
         val_loss = 0
 
@@ -589,9 +594,6 @@ def train_graph(
                     .item()
 
                 )
-
-
-        model.train()
 
 
         if val_loss < best_val:

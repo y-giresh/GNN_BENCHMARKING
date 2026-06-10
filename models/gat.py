@@ -37,50 +37,55 @@ class GAT(
 
         self.dropout = dropout
 
-
+        # FIX #1 (architecture parity) + double-dropout:
+        # heads=8, each head dim = hidden_dim//8, total output = hidden_dim.
+        # dropout=0.0 inside GATConv — F.dropout below handles it once,
+        # same as every other model. Previously dropout was applied twice.
         self.conv1 = GATConv(
 
             input_dim,
 
-            hidden_dim,
+            hidden_dim // 8,
 
             heads=8,
 
-            dropout=dropout
+            dropout=0.0
 
         )
 
 
         self.bn1 = BatchNorm(
 
-            hidden_dim * 8
+            hidden_dim
 
         )
 
-
+        # FIX #1: conv2 now outputs hidden_dim (not output_dim), so the
+        # classifier linear below does the actual hidden->output projection,
+        # matching GCN's architecture exactly.
         self.conv2 = GATConv(
 
-            hidden_dim * 8,
+            hidden_dim,
 
-            output_dim,
+            hidden_dim,
 
             heads=1,
 
             concat=False,
 
-            dropout=dropout
+            dropout=0.0
 
         )
         
         self.bn2 = BatchNorm(
 
-            output_dim
+            hidden_dim
 
         )
         
         self.classifier = torch.nn.Linear(
 
-           output_dim,
+           hidden_dim,
 
            output_dim
 

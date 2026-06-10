@@ -166,9 +166,11 @@ def common_neighbors_score(
 
         try:
 
-            out_u = set(
+            # FIX #5 (continued): graph is now nx.Graph so use .neighbors()
+            # instead of .successors()/.predecessors() which are DiGraph-only.
+            neighbors_u = set(
 
-                graph.successors(
+                graph.neighbors(
 
                     u
 
@@ -177,9 +179,9 @@ def common_neighbors_score(
             )
 
 
-            in_v = set(
+            neighbors_v = set(
 
-                graph.predecessors(
+                graph.neighbors(
 
                     v
 
@@ -190,11 +192,11 @@ def common_neighbors_score(
 
             score = len(
 
-                out_u
+                neighbors_u
 
                 &
 
-                in_v
+                neighbors_v
 
             )
 
@@ -238,9 +240,10 @@ def adamic_adar_score(
           
         try:
 
-            out_u = set(
+            # FIX #5 (continued): use .neighbors() for undirected nx.Graph.
+            neighbors_u = set(
 
-                graph.successors(
+                graph.neighbors(
 
                     u
 
@@ -249,9 +252,9 @@ def adamic_adar_score(
             )
 
 
-            in_v = set(
+            neighbors_v = set(
 
-                graph.predecessors(
+                graph.neighbors(
 
                     v
 
@@ -262,11 +265,11 @@ def adamic_adar_score(
 
             common = (
 
-                out_u
+                neighbors_u
 
                 &
 
-                in_v
+                neighbors_v
 
             )
 
@@ -279,7 +282,7 @@ def adamic_adar_score(
 
                 np.log(
 
-                    graph.in_degree(
+                    graph.degree(
 
                         n
 
@@ -335,9 +338,11 @@ def preferential_attachment_score(
 
         try:
 
+            # FIX #5 (continued): use .degree() for undirected nx.Graph
+            # instead of .out_degree()/.in_degree() which are DiGraph-only.
             score = (
 
-                graph.out_degree(
+                graph.degree(
 
                     u
 
@@ -345,7 +350,7 @@ def preferential_attachment_score(
 
                 *
 
-                graph.in_degree(
+                graph.degree(
 
                     v
 

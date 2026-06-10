@@ -166,9 +166,12 @@ def get_dataset(
 
     if dataset_name == "cora":
 
-        return create_split(
-
-            Planetoid(
+        # FIX #4: Return the Planetoid dataset directly without calling
+        # create_split(). The original code always overwrote Planetoid's
+        # standard fixed train/val/test masks with a random 70/15/15 split,
+        # making results incomparable to every published paper on Cora,
+        # CiteSeer, and PubMed. Now the original masks are preserved.
+        return Planetoid(
 
                 root="data",
 
@@ -176,14 +179,10 @@ def get_dataset(
 
             )
 
-        )
-
 
     elif dataset_name == "citeseer":
 
-        return create_split(
-
-            Planetoid(
+        return Planetoid(
 
                 root="data",
 
@@ -191,22 +190,16 @@ def get_dataset(
 
             )
 
-        )
-
 
     elif dataset_name == "pubmed":
 
-        return create_split(
-
-            Planetoid(
+        return Planetoid(
 
                 root="data",
 
                 name="PubMed"
 
             )
-
-        )
 
 
     elif dataset_name == "mutag":

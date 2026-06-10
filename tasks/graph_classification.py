@@ -40,11 +40,15 @@ def load_graph_dataset(
     fold_loaders = []
 
 
-    for train_idx, test_idx in kf.split(
+    for fold_idx, (train_idx, test_idx) in enumerate(
 
-        range(
+        kf.split(
 
-            len(dataset)
+            range(
+
+                len(dataset)
+
+            )
 
         )
 
@@ -103,6 +107,12 @@ def load_graph_dataset(
 
         )
 
+        # FIX #2: Seed torch.randperm per fold using 42 + fold_idx.
+        # Without this the split is non-deterministic across separate runs
+        # even when a global seed is set, because the global RNG state is
+        # consumed differently each time. Now each fold always gets the
+        # same train/val assignment regardless of when you run it.
+        torch.manual_seed(42 + fold_idx)
 
         indices = torch.randperm(
 

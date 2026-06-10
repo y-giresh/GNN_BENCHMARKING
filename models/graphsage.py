@@ -53,24 +53,26 @@ class GraphSAGE(
 
         )
 
-
+        # FIX #1: conv2 now outputs hidden_dim (was output_dim).
+        # That made classifier a pointless output_dim->output_dim identity layer.
+        # Now classifier does the real hidden_dim->output_dim projection, same as GCN.
         self.conv2 = SAGEConv(
 
             hidden_dim,
 
-            output_dim
+            hidden_dim
 
         )
         
         self.bn2 = BatchNorm(
 
-          output_dim
+          hidden_dim
 
          )
         
         self.classifier = torch.nn.Linear(
 
-           output_dim,
+           hidden_dim,
 
             output_dim
 

@@ -37,10 +37,7 @@ class GAT(
 
         self.dropout = dropout
 
-        # FIX #1 (architecture parity) + double-dropout:
-        # heads=8, each head dim = hidden_dim//8, total output = hidden_dim.
-        # dropout=0.0 inside GATConv — F.dropout below handles it once,
-        # same as every other model. Previously dropout was applied twice.
+     
         self.conv1 = GATConv(
 
             input_dim,
@@ -60,9 +57,7 @@ class GAT(
 
         )
 
-        # FIX #1: conv2 now outputs hidden_dim (not output_dim), so the
-        # classifier linear below does the actual hidden->output projection,
-        # matching GCN's architecture exactly.
+      
         self.conv2 = GATConv(
 
             hidden_dim,

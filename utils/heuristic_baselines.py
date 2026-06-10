@@ -166,8 +166,6 @@ def common_neighbors_score(
 
         try:
 
-            # FIX #5 (continued): graph is now nx.Graph so use .neighbors()
-            # instead of .successors()/.predecessors() which are DiGraph-only.
             neighbors_u = set(
 
                 graph.neighbors(
@@ -240,7 +238,6 @@ def adamic_adar_score(
           
         try:
 
-            # FIX #5 (continued): use .neighbors() for undirected nx.Graph.
             neighbors_u = set(
 
                 graph.neighbors(
@@ -338,8 +335,7 @@ def preferential_attachment_score(
 
         try:
 
-            # FIX #5 (continued): use .degree() for undirected nx.Graph
-            # instead of .out_degree()/.in_degree() which are DiGraph-only.
+         
             score = (
 
                 graph.degree(

@@ -218,11 +218,7 @@ elif task == "link":
 
     )
 
-    # FIX #5: Use nx.Graph (undirected) instead of nx.DiGraph (directed).
-    # RandomLinkSplit is called with is_undirected=True, so the GNN models
-    # see undirected edges. Using nx.DiGraph gave the heuristics a different
-    # graph topology (directed successors/predecessors) than the GNNs used,
-    # making the heuristic scores an unfair baseline comparison.
+
     graph = nx.Graph()
 
     edges = (

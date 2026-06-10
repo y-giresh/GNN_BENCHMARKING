@@ -77,10 +77,7 @@ class GIN(
 
         )
 
-        # FIX #1: mlp2 now outputs hidden_dim (was output_dim).
-        # That made bn2 and classifier both work on output_dim, turning
-        # classifier into a no-op output_dim->output_dim layer.
-        # Now classifier does the real hidden_dim->output_dim projection, same as GCN.
+       
         mlp2 = Sequential(
 
             Linear(

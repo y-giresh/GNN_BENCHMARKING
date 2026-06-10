@@ -516,10 +516,7 @@ def train_graph(
 
     ):
 
-        # FIX #3: model.train() moved to the top of the epoch loop, outside
-        # the batch loop. Previously it sat INSIDE the batch loop after
-        # optimizer.step(), which called model.eval() at the start of every
-        # subsequent batch iteration, disabling dropout during training.
+
         model.train()
 
         total_loss = 0

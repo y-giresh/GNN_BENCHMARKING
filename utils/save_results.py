@@ -2,6 +2,31 @@ import os
 import pandas as pd
 
 
+def _norm(
+
+    value
+
+):
+
+    # FIX #8: normalise numeric hyperparameters to a fixed-precision string
+    # before duplicate comparison so that equivalent floats written in
+    # different notations (e.g. 0.001 vs 1e-3) are treated as identical and
+    # do not produce duplicate rows.
+    try:
+
+        return f"{float(value):.10g}"
+
+    except (
+
+        TypeError,
+
+        ValueError
+
+    ):
+
+        return str(value)
+
+
 def save_result(
 
     task,
@@ -159,23 +184,23 @@ def save_result(
 
         &
 
-        (df["Hidden"].astype(str) == str(hidden))
+        (df["Hidden"].apply(_norm) == _norm(hidden))
 
         &
 
-        (df["LR"].astype(str) == str(lr))
+        (df["LR"].apply(_norm) == _norm(lr))
 
         &
 
-        (df["Dropout"].astype(str) == str(dropout))
+        (df["Dropout"].apply(_norm) == _norm(dropout))
 
         &
 
-        (df["Weight_Decay"].astype(str) == str(weight_decay))
+        (df["Weight_Decay"].apply(_norm) == _norm(weight_decay))
 
         &
 
-        (df["Epochs"].astype(str) == str(epochs))
+        (df["Epochs"].apply(_norm) == _norm(epochs))
 
     )
 

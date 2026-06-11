@@ -30,19 +30,19 @@ def train(
     )
 
     wait = 0
-    
-    
+
     best_state = None
-
-
-    model.train()
-
 
     for epoch in range(
 
         epochs
 
     ):
+
+        # FIX #1: model.train() placed at top of each epoch iteration
+        # so that after early-stop best_state reload (which calls model.eval())
+        # the next epoch always starts in training mode correctly.
+        model.train()
 
         optimizer.zero_grad()
 
@@ -136,28 +136,25 @@ def train(
                 val_loss = loss
 
 
-        model.train()
-
-
         if val_loss < best_val:
 
-         best_val = val_loss
+            best_val = val_loss
 
-         wait = 0
+            wait = 0
 
-         best_state = {
+            best_state = {
 
-         k:
+                k:
 
-         v.cpu()
+                v.cpu()
 
-         for k, v
+                for k, v
 
-         in model.state_dict()
+                in model.state_dict()
 
-         .items()
+                .items()
 
-        }
+            }
 
         else:
 
@@ -188,16 +185,16 @@ def train(
                 f" | Val {val_loss:.4f}"
 
             )
-        
+
     if best_state is not None:
 
-     model.load_state_dict(
+        model.load_state_dict(
 
-         best_state
+            best_state
 
-     )
+        )
 
-     model.eval()
+        model.eval()
 
 
 
@@ -247,7 +244,10 @@ def train_link(
 
 ):
 
-    best_auc = 0
+    # FIX #5: initialise best_auc to -1 (not 0) so that even a first-epoch
+    # AUC of exactly 0.0 is correctly treated as an improvement, preventing
+    # the patience counter from draining before training has started.
+    best_auc = -1.0
 
     wait = 0
 
@@ -424,7 +424,6 @@ def train_link(
 
             wait = 0
 
-
             best_state = (
 
                 {
@@ -498,7 +497,7 @@ def train_graph(
     optimizer,
 
     epochs=50,
-    
+
     patience=20
 
 ):
@@ -518,7 +517,6 @@ def train_graph(
         epochs
 
     ):
-
 
         model.train()
 
@@ -602,7 +600,6 @@ def train_graph(
 
             wait = 0
 
-
             best_state = {
 
                 k:
@@ -616,7 +613,6 @@ def train_graph(
                 .items()
 
             }
-
 
         else:
 
@@ -632,6 +628,7 @@ def train_graph(
             )
 
             break
+
         if epoch % 10 == 0:
 
             print(

@@ -75,8 +75,6 @@ def load_graph_dataset(
 
         )
 
-      
-
 
         train_size = int(
 
@@ -107,14 +105,13 @@ def load_graph_dataset(
 
         )
 
-       
         torch.manual_seed(42 + fold_idx)
 
         indices = torch.randperm(
 
-          len(
+            len(
 
-              train_dataset
+                train_dataset
 
             )
 
@@ -126,34 +123,35 @@ def load_graph_dataset(
 
         train_indices = indices[
 
-              :train_size
+            :train_size
 
         ]
 
 
         val_indices = indices[
 
-         train_size:
+            train_size:
 
-         ]
+        ]
 
 
         train_dataset = [
 
-          original_train[i]
+            original_train[i]
 
-          for i in train_indices
+            for i in train_indices
 
         ]
 
 
         val_dataset = [
 
-          original_train[i]
+            original_train[i]
 
-          for i in val_indices
+            for i in val_indices
 
-        ]   
+        ]
+
         train_loader = DataLoader(
 
             train_dataset,
@@ -163,6 +161,7 @@ def load_graph_dataset(
             shuffle=True
 
         )
+
         val_loader = DataLoader(
 
             val_dataset,
@@ -190,6 +189,7 @@ def load_graph_dataset(
             (
 
                 train_loader,
+
                 val_loader,
 
                 test_loader
@@ -198,6 +198,29 @@ def load_graph_dataset(
 
         )
 
+
+    # FIX #4: some TUDatasets (e.g. ENZYMES) have no continuous node features,
+    # so dataset.num_features returns None or 0.  We fall back to
+    # num_node_labels (one-hot encoded labels PyG adds automatically when
+    # use_node_attr=True is not set) and finally to 1 as a last resort so
+    # that model constructors never receive None as input_dim.
+    num_features = dataset.num_features
+
+    if not num_features:
+
+        num_features = getattr(
+
+            dataset,
+
+            "num_node_labels",
+
+            None
+
+        ) or 1
+
+        dataset._data.x = None  # will be handled by model input guard
+
+    dataset._num_features = num_features
 
     return (
 

@@ -3,7 +3,7 @@ BENCHMARK SUMMARY
 === NODE CLASSIFICATION ===
 
 Task     Model  Dataset Hidden    LR Dropout Weight_Decay Epochs Accuracy Macro_F1 Weighted_F1 Training_Time Parameters Memory_MB
-node       gcn     cora     32  0.01     0.5       0.0005    200    0.676   0.6765      0.6735          0.91      47303    387.28
+node       gcn     cora     32  0.01     0.5       0.0005    200    0.676   0.6765      0.6735          1.17      47303    393.05
 node       gat     cora     32  0.01     0.5       0.0005    200    0.719   0.7096      0.7215          1.39      47431    399.02
 node graphsage     cora     32  0.01     0.5       0.0005    200    0.729   0.7188       0.731          1.84      94183    482.79
 node       gin     cora     32  0.01     0.5       0.0005    200    0.579   0.5781      0.5949          2.19      49415    470.16
@@ -35,7 +35,7 @@ link       gin   pubmed     32  0.01     0.5       0.0005    200  0.7462        
 === GRAPH CLASSIFICATION ===
 
  Task     Model  Dataset Hidden    LR Dropout Weight_Decay Epochs Accuracy_Mean Accuracy_Std Precision  Recall      F1 ROC_AUC Training_Time Parameters Memory_MB
-graph       gcn    mutag     32  0.01     0.5       0.0005    200        0.7126       0.0801    0.7074    0.64  0.6413       0         54.94       1442    361.19
+graph       gcn    mutag     32  0.01     0.5       0.0005    200        0.7178       0.0798      0.73  0.6454  0.6392  0.8096         15.18       1506    380.24
 graph       gat    mutag     32  0.01     0.5       0.0005    200        0.7442       0.0958     0.713  0.6755  0.6603       0         75.78       3590    379.25
 graph graphsage    mutag     32  0.01     0.5       0.0005    200        0.7602       0.0839    0.7622  0.7097   0.707       0         37.05        674    360.05
 graph       gin    mutag     32  0.01     0.5       0.0005    200        0.7719       0.1001    0.8004  0.7539  0.7347       0         38.24       1442    359.85

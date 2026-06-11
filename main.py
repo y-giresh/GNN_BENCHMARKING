@@ -76,7 +76,27 @@ weight_decay = float(sys.argv[7]) if len(sys.argv) > 7 else 5e-4
 epochs = int(sys.argv[8]) if len(sys.argv) > 8 else 200
 
 
-start = time.time()
+# FIX #11: validate GAT hidden_dim constraint BEFORE data loading so the
+# user gets a clear error message immediately, not after waiting for the
+# dataset to download and preprocess.
+if model_name == "gat" and hidden_dim % 8 != 0:
+
+    print()
+
+    print(
+
+        f"Error: GAT requires hidden_dim divisible by 8, got {hidden_dim}."
+
+    )
+
+    print(
+
+        "Please choose a value such as 32, 64, 128, 256."
+
+    )
+
+    sys.exit(1)
+
 
 process = psutil.Process(
     os.getpid()
@@ -109,6 +129,10 @@ if task == "node":
     )
 
     data = dataset[0]
+
+    # FIX #13: start timer AFTER data loading so Training_Time reflects only
+    # actual training + evaluation time, not dataset download/preprocessing.
+    start = time.time()
 
     model = get_model(
 
@@ -172,6 +196,8 @@ elif task == "link":
 
     )
 
+    # FIX #13: start timer AFTER data loading.
+    start = time.time()
 
     model = get_model(
 
@@ -204,7 +230,7 @@ elif task == "link":
         model,
 
         train_data,
-        
+
         val_data,
 
         optimizer,
@@ -391,6 +417,7 @@ elif task == "link":
             f"PA_{k}"
 
         ] = v
+
 elif task == "graph":
 
     from tasks.graph_classification import (
@@ -422,6 +449,25 @@ elif task == "graph":
 
     )
 
+    # FIX #3: guard against empty fold_loaders (dataset too small for the
+    # requested number of folds) which would leave `model` undefined and crash
+    # when computing acc["Parameters"] below.
+    if len(fold_loaders) == 0:
+
+        print()
+
+        print(
+
+            "Error: no folds were created. "
+
+            "The dataset may be too small for the requested number of folds."
+
+        )
+
+        sys.exit(1)
+
+    # FIX #13: start timer AFTER data loading and fold preparation.
+    start = time.time()
 
     fold_acc = []
 
@@ -430,7 +476,7 @@ elif task == "graph":
     fold_recall = []
 
     fold_f1 = []
-     
+
     fold_roc = []
 
 
@@ -533,14 +579,14 @@ elif task == "graph":
             result["F1"]
 
         )
-        
+
         if result["ROC_AUC"] is not None:
 
-          fold_roc.append(
+            fold_roc.append(
 
-             result["ROC_AUC"]
+                result["ROC_AUC"]
 
-             )
+            )
 
 
         print(
@@ -552,124 +598,124 @@ elif task == "graph":
 
     acc = {
 
-    "Accuracy_Mean":
+        "Accuracy_Mean":
 
-    round(
+        round(
 
-        float(
+            float(
 
-            np.mean(
+                np.mean(
 
-                fold_acc
+                    fold_acc
 
-            )
+                )
 
-        ),
+            ),
 
-        4
-
-    ),
-
-
-    "Accuracy_Std":
-
-    round(
-
-        float(
-
-            np.std(
-
-                fold_acc
-
-            )
+            4
 
         ),
 
-        4
 
-    ),
+        "Accuracy_Std":
 
+        round(
 
-    "Precision":
+            float(
 
-    round(
+                np.std(
 
-        float(
+                    fold_acc
 
-            np.mean(
+                )
 
-                fold_precision
+            ),
 
-            )
-
-        ),
-
-        4
-
-    ),
-
-
-    "Recall":
-
-    round(
-
-        float(
-
-            np.mean(
-
-                fold_recall
-
-            )
+            4
 
         ),
 
-        4
 
-    ),
+        "Precision":
 
+        round(
 
-    "F1":
+            float(
 
-    round(
+                np.mean(
 
-        float(
+                    fold_precision
 
-            np.mean(
+                )
 
-                fold_f1
+            ),
 
-            )
+            4
 
         ),
 
-        4
 
-    ),
+        "Recall":
+
+        round(
+
+            float(
+
+                np.mean(
+
+                    fold_recall
+
+                )
+
+            ),
+
+            4
+
+        ),
 
 
-    "ROC_AUC":
+        "F1":
 
-round(
+        round(
 
-    float(
+            float(
 
-        np.mean(
+                np.mean(
 
-            fold_roc
+                    fold_f1
+
+                )
+
+            ),
+
+            4
+
+        ),
+
+
+        "ROC_AUC":
+
+        round(
+
+            float(
+
+                np.mean(
+
+                    fold_roc
+
+                )
+
+            ),
+
+            4
 
         )
 
-    ),
+        if fold_roc
 
-    4
+        else "NA",
 
-)
-
-if fold_roc
-
-else "NA",
-
-}
+    }
 
 
 else:
@@ -745,15 +791,15 @@ save_result(
     dataset_name,
 
     acc,
-    
+
     hidden_dim,
-    
+
     learning_rate,
-    
+
     dropout,
-    
+
     weight_decay,
-    
+
     epochs
 
 )

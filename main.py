@@ -76,9 +76,6 @@ weight_decay = float(sys.argv[7]) if len(sys.argv) > 7 else 5e-4
 epochs = int(sys.argv[8]) if len(sys.argv) > 8 else 200
 
 
-# FIX #11: validate GAT hidden_dim constraint BEFORE data loading so the
-# user gets a clear error message immediately, not after waiting for the
-# dataset to download and preprocess.
 if model_name == "gat" and hidden_dim % 8 != 0:
 
     print()
@@ -130,8 +127,7 @@ if task == "node":
 
     data = dataset[0]
 
-    # FIX #13: start timer AFTER data loading so Training_Time reflects only
-    # actual training + evaluation time, not dataset download/preprocessing.
+
     start = time.time()
 
     model = get_model(
@@ -196,7 +192,6 @@ elif task == "link":
 
     )
 
-    # FIX #13: start timer AFTER data loading.
     start = time.time()
 
     model = get_model(
@@ -449,9 +444,6 @@ elif task == "graph":
 
     )
 
-    # FIX #3: guard against empty fold_loaders (dataset too small for the
-    # requested number of folds) which would leave `model` undefined and crash
-    # when computing acc["Parameters"] below.
     if len(fold_loaders) == 0:
 
         print()
@@ -466,7 +458,7 @@ elif task == "graph":
 
         sys.exit(1)
 
-    # FIX #13: start timer AFTER data loading and fold preparation.
+
     start = time.time()
 
     fold_acc = []

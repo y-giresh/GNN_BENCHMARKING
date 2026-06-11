@@ -70,8 +70,6 @@ def compare_results():
 
         )
 
-    # FIX #15: print an informative message when no result files exist yet
-    # instead of silently returning, so users know why nothing was generated.
     if not found_any:
 
         print()

@@ -39,9 +39,6 @@ def train(
 
     ):
 
-        # FIX #1: model.train() placed at top of each epoch iteration
-        # so that after early-stop best_state reload (which calls model.eval())
-        # the next epoch always starts in training mode correctly.
         model.train()
 
         optimizer.zero_grad()
@@ -244,9 +241,7 @@ def train_link(
 
 ):
 
-    # FIX #5: initialise best_auc to -1 (not 0) so that even a first-epoch
-    # AUC of exactly 0.0 is correctly treated as an improvement, preventing
-    # the patience counter from draining before training has started.
+  
     best_auc = -1.0
 
     wait = 0

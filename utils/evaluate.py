@@ -29,8 +29,7 @@ def evaluate(
 
 ):
 
-    # FIX #2: guard for missing test_mask — raises a clear error instead of
-    # crashing with an unhelpful AttributeError deep inside tensor indexing.
+
     if not hasattr(data, "test_mask") or data.test_mask is None:
 
         raise ValueError(
@@ -343,10 +342,7 @@ def evaluate_link(
         )
 
 
-        # NOTE: torch.topk(...).indices returns positional indices into the
-        # prob tensor. This correctly maps back to y_true because prob and
-        # y_true are aligned by position (both derived from edge_label_index
-        # in the same order). Do not reorder either tensor independently.
+     
         top_k = torch.topk(
 
             prob,
@@ -595,9 +591,7 @@ def evaluate_graph(
         roc = None
 
 
-    # FIX #12: confusion matrix serialised as a string and included in the
-    # returned dict so it is captured by save_result() and the results file,
-    # instead of only being printed to stdout and lost.
+
     cm_str = str(cm.tolist())
 
     return {
@@ -686,8 +680,6 @@ def evaluate_graph(
 
         roc,
 
-        # Confusion matrix saved as a string for the results file.
-        # Each fold's matrix is visible both in stdout and the saved xlsx.
         "Confusion_Matrix":
 
         cm_str

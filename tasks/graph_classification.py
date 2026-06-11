@@ -199,11 +199,7 @@ def load_graph_dataset(
         )
 
 
-    # FIX #4: some TUDatasets (e.g. ENZYMES) have no continuous node features,
-    # so dataset.num_features returns None or 0.  We fall back to
-    # num_node_labels (one-hot encoded labels PyG adds automatically when
-    # use_node_attr=True is not set) and finally to 1 as a last resort so
-    # that model constructors never receive None as input_dim.
+    
     num_features = dataset.num_features
 
     if not num_features:
@@ -218,7 +214,7 @@ def load_graph_dataset(
 
         ) or 1
 
-        dataset._data.x = None  # will be handled by model input guard
+        dataset._data.x = None 
 
     dataset._num_features = num_features
 

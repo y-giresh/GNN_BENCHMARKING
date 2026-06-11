@@ -7,10 +7,7 @@ def load_dataset(
 
 ):
 
-    # FIX #9: dataset_name is now a parameter instead of being hardcoded to
-    # PubMed.  This aligns node_classification.py with the rest of the
-    # pipeline (main.py uses tasks/__init__.py → get_dataset() for the actual
-    # training flow; this module is used for quick standalone inspection only).
+   
     name_map = {
 
         "cora": "Cora",

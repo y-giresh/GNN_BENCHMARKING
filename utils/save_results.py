@@ -8,10 +8,7 @@ def _norm(
 
 ):
 
-    # FIX #8: normalise numeric hyperparameters to a fixed-precision string
-    # before duplicate comparison so that equivalent floats written in
-    # different notations (e.g. 0.001 vs 1e-3) are treated as identical and
-    # do not produce duplicate rows.
+
     try:
 
         return f"{float(value):.10g}"

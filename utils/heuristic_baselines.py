@@ -50,7 +50,7 @@ def evaluate_scores(
 
             "F1": 0,
 
-            "Hits@K": 0
+            "Hits@10pct": 0
 
         }
 
@@ -140,7 +140,7 @@ def evaluate_scores(
 
         ),
 
-        "Hits@K":
+        "Hits@10pct":
 
         hits_at_k
 

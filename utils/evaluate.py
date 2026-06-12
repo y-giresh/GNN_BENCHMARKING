@@ -401,7 +401,7 @@ def evaluate_link(
 
         ),
 
-        "Hits@K":
+        "Hits@10pct":
 
         round(
 

@@ -2,9 +2,44 @@ from torch_geometric.datasets import TUDataset
 
 from torch_geometric.loader import DataLoader
 
-from sklearn.model_selection import KFold
+from torch_geometric.utils import degree
+
+from sklearn.model_selection import StratifiedKFold
 
 import torch
+import numpy as np
+
+
+def _add_degree_features(dataset):
+    """
+    For TU datasets with no node features (data.x is None), compute
+    one-hot degree features so all models receive a valid input tensor.
+    The degree is capped at max_degree to keep the feature dimension
+    manageable, and every node gets a float32 feature vector of that size.
+    """
+    max_degree = 0
+    for data in dataset:
+        if data.edge_index.numel() > 0:
+            d = degree(
+                data.edge_index[0],
+                num_nodes=data.num_nodes,
+                dtype=torch.long
+            )
+            max_degree = max(max_degree, int(d.max()))
+
+    for data in dataset:
+        d = degree(
+            data.edge_index[0],
+            num_nodes=data.num_nodes,
+            dtype=torch.long
+        )
+        # clamp so isolated nodes or very high-degree nodes stay in range
+        d = d.clamp(max=max_degree)
+        one_hot = torch.zeros(data.num_nodes, max_degree + 1)
+        one_hot[torch.arange(data.num_nodes), d] = 1.0
+        data.x = one_hot
+
+    return dataset, max_degree + 1
 
 
 def load_graph_dataset(
@@ -25,8 +60,21 @@ def load_graph_dataset(
 
     )
 
+    # --- Handle missing node features ---
+    # Check the first graph; if x is None the whole dataset lacks features.
+    if dataset[0].x is None:
+        print(
+            f"\n[Warning] '{dataset_name.upper()}' has no node features. "
+            "Using one-hot degree features as input."
+        )
+        dataset, num_features = _add_degree_features(dataset)
+    else:
+        num_features = dataset.num_features
 
-    kf = KFold(
+    # Collect graph-level labels for stratified splitting
+    graph_labels = np.array([int(data.y.item()) for data in dataset])
+
+    kf = StratifiedKFold(
 
         n_splits=folds,
 
@@ -42,13 +90,16 @@ def load_graph_dataset(
 
     for fold_idx, (train_idx, test_idx) in enumerate(
 
+        # Pass graph_labels so folds are class-balanced
         kf.split(
 
             range(
 
                 len(dataset)
 
-            )
+            ),
+
+            graph_labels
 
         )
 
@@ -198,23 +249,6 @@ def load_graph_dataset(
 
         )
 
-
-    
-    num_features = dataset.num_features
-
-    if not num_features:
-
-        num_features = getattr(
-
-            dataset,
-
-            "num_node_labels",
-
-            None
-
-        ) or 1
-
-        dataset._data.x = None 
 
     dataset._num_features = num_features
 

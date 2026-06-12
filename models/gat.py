@@ -49,7 +49,7 @@ class GAT(
 
             heads=8,
 
-            dropout=0.0
+            dropout=dropout  # attention coefficient dropout, per GAT paper
 
         )
 
@@ -71,7 +71,7 @@ class GAT(
 
             concat=False,
 
-            dropout=0.0
+            dropout=dropout  # attention coefficient dropout, per GAT paper
 
         )
         
@@ -143,31 +143,16 @@ class GAT(
             edge_index
 
         )
-        
+
         x = self.bn2(
 
            x
 
         )
 
-
-        x = F.relu(
-
-          x
-
-        )
-
-
-        x = F.dropout(
-
-            x,
-
-          p=self.dropout,
-
-           training=self.training
-
-        )
-
+        # No ReLU or dropout here — the classifier needs the raw pre-logit
+        # representation; applying a nonlinearity at this stage collapses the
+        # output space and hurts node/link prediction performance.
 
         if batch is not None:
 

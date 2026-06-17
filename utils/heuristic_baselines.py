@@ -77,6 +77,9 @@ def evaluate_scores(
     )
 
 
+    # Hits@10pct: rank all candidate edges by score, take the top 10%,
+    # and report the fraction of those top-ranked edges that are true
+    # positive edges.
     k = max(1, int(0.1 * len(scores)))
 
     top_k_indices = np.argsort(scores)[::-1][:k]

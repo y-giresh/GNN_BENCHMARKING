@@ -7,7 +7,8 @@ torch.manual_seed(42)
 
 
 def load_link_dataset(
-    name
+    name,
+    directed=False
 ):
 
     datasets = {
@@ -38,7 +39,7 @@ def load_link_dataset(
 
         num_test=0.2,
 
-        is_undirected=True,
+        is_undirected=not directed,
 
         add_negative_train_samples=True
 

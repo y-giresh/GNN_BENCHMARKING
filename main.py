@@ -52,7 +52,7 @@ if len(sys.argv) < 4:
     print()
 
     print(
-        "python main.py [task] [model] [dataset] [hidden] [lr] [dropout] [weight_decay] [epochs]"
+        "python main.py [task] [model] [dataset] [hidden] [lr] [dropout] [weight_decay] [epochs] [directed]"
     )
 
     sys.exit()
@@ -74,6 +74,8 @@ dropout = float(sys.argv[6]) if len(sys.argv) > 6 else 0.5
 weight_decay = float(sys.argv[7]) if len(sys.argv) > 7 else 5e-4
 
 epochs = int(sys.argv[8]) if len(sys.argv) > 8 else 200
+
+directed = bool(int(sys.argv[9])) if len(sys.argv) > 9 else False
 
 
 if model_name == "gat" and hidden_dim % 8 != 0:
@@ -187,7 +189,8 @@ elif task == "link":
     dataset, train_data, val_data, test_data = (
 
         load_link_dataset(
-            dataset_name
+            dataset_name,
+            directed
         )
 
     )
@@ -244,7 +247,7 @@ elif task == "link":
     )
 
 
-    graph = nx.Graph()
+    graph = nx.DiGraph() if directed else nx.Graph()
 
     graph.add_nodes_from(
 

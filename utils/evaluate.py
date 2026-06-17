@@ -321,6 +321,9 @@ def evaluate_link(
         )
 
 
+        # Hits@10pct: rank all candidate edges (positives + negatives) by
+        # predicted score, take the top 10% by score, and report the
+        # fraction of those top-ranked edges that are true positive edges.
         k = max(
 
             1,
@@ -342,7 +345,6 @@ def evaluate_link(
         )
 
 
-     
         top_k = torch.topk(
 
             prob,

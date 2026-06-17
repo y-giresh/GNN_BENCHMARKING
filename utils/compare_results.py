@@ -14,6 +14,16 @@ def compare_results():
 
     }
 
+    rank_metric = {
+
+        "node": "Accuracy",
+
+        "link": "AUC",
+
+        "graph": "Accuracy_Mean",
+
+    }
+
     target = (
 
         "results/comparison.txt"
@@ -69,6 +79,74 @@ def compare_results():
             "\n\n"
 
         )
+
+        metric = rank_metric.get(
+
+            task
+
+        )
+
+        if metric and metric in df.columns and "Dataset" in df.columns:
+
+            lines.append(
+
+                f"--- Best {task.upper()} model per dataset (ranked by {metric}) ---\n\n"
+
+            )
+
+            ranked = df.copy()
+
+            ranked[metric] = pd.to_numeric(
+
+                ranked[metric],
+
+                errors="coerce"
+
+            )
+
+            ranked = ranked.dropna(
+
+                subset=[metric]
+
+            )
+
+            for dataset_name, group in ranked.groupby("Dataset"):
+
+                group_sorted = group.sort_values(
+
+                    metric,
+
+                    ascending=False
+
+                )
+
+                best_row = group_sorted.iloc[0]
+
+                lines.append(
+
+                    f"{dataset_name}: {best_row['Model']} "
+
+                    f"({metric}={best_row[metric]})\n"
+
+                )
+
+                lines.append(
+
+                    group_sorted[["Model", metric]]
+
+                    .to_string(
+
+                        index=False
+
+                    )
+
+                )
+
+                lines.append(
+
+                    "\n\n"
+
+                )
 
     if not found_any:
 

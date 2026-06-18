@@ -1,11 +1,17 @@
 torch
 torch-geometric
 scikit-learn
-matplotlib
+pandas
+numpy
+networkx
+psutil
+openpyxl
 
-
-
-torch → runs neural networks (GCN, GAT, GraphSAGE, GIN)
-torch-geometric → gives graph datasets + graph layers
-scikit-learn → calculate Accuracy, F1
-matplotlib → draw result graphs
+# torch           -> runs the neural networks (GCN, GAT, GraphSAGE, GIN)
+# torch-geometric -> graph datasets, graph conv layers, DataLoader, transforms
+# scikit-learn    -> Accuracy, F1, AUC, Average Precision, StratifiedKFold
+# pandas          -> building/saving/loading result tables (results/*.xlsx)
+# numpy           -> array ops used in evaluate.py / heuristic_baselines.py
+# networkx        -> builds the graph for the link-prediction heuristic baselines
+# psutil          -> process memory usage tracking in main.py
+# openpyxl        -> Excel (.xlsx) read/write engine required by pandas

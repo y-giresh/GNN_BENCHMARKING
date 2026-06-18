@@ -216,6 +216,17 @@ def evaluate_link(
     test_data
 
 ):
+    """
+    Evaluates a trained link prediction model on the test split.
+
+    Hits@10pct definition: all candidate test edges (positive ground-truth
+    edges + sampled negative edges) are ranked by the model's predicted
+    score, highest first. The top 10% of that ranked list is taken, and
+    Hits@10pct is the fraction of those top-ranked candidates that are
+    true positive edges. It rewards a model for placing real edges near
+    the top of the ranking, rather than just classifying each edge in
+    isolation at a fixed 0.5 threshold (which is what AUC/F1 measure).
+    """
 
     model.eval()
 

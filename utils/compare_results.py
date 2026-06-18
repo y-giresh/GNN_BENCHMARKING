@@ -38,6 +38,50 @@ def compare_results():
 
     ]
 
+    # --- Overall "best model per task/dataset" table, shown first so it's
+    # not buried under the raw per-row dumps further down. Built from the
+    # same ranking logic used below, just collected across all tasks first.
+    overall_best = []
+
+    for task, file_name in result_files.items():
+
+        if not os.path.exists(file_name):
+
+            continue
+
+        metric = rank_metric.get(task)
+
+        df_peek = pd.read_excel(file_name, dtype=object)
+
+        if not (metric and metric in df_peek.columns and "Dataset" in df_peek.columns):
+
+            continue
+
+        ranked_peek = df_peek.copy()
+
+        ranked_peek[metric] = pd.to_numeric(ranked_peek[metric], errors="coerce")
+
+        ranked_peek = ranked_peek.dropna(subset=[metric])
+
+        for dataset_name, group in ranked_peek.groupby("Dataset"):
+
+            best_row = group.sort_values(metric, ascending=False).iloc[0]
+
+            overall_best.append(
+
+                f"{task.upper():<6} {dataset_name:<10} "
+                f"best={best_row['Model']:<10} {metric}={best_row[metric]}"
+
+            )
+
+    if overall_best:
+
+        lines.append("=== BEST MODEL PER TASK/DATASET (OVERALL) ===\n\n")
+
+        lines.extend(line + "\n" for line in overall_best)
+
+        lines.append("\n\n")
+
     for task, file_name in result_files.items():
 
         if not os.path.exists(

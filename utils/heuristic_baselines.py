@@ -21,6 +21,17 @@ def evaluate_scores(
     labels
 
 ):
+    """
+    Scores a set of heuristic link-prediction candidate scores against
+    ground-truth labels (1 = real edge, 0 = sampled negative edge).
+
+    Hits@10pct definition: candidate edges are ranked by score, highest
+    first; the top 10% of the ranking is taken; Hits@10pct is the
+    fraction of that top 10% which are true positive edges. Same
+    definition as used for the GNN models in utils/evaluate.py, so the
+    heuristic baselines and learned models are directly comparable on
+    this metric.
+    """
 
     scores = np.array(
 

@@ -10,6 +10,15 @@ def load_link_dataset(
     name,
     directed=False
 ):
+    """
+    NOTE on `directed`: this only controls RandomLinkSplit's negative
+    edge sampling strategy (is_undirected=not directed). It does NOT
+    make the GNN encoders themselves direction-aware -- GCNConv, GATConv,
+    SAGEConv, and GINConv as used in this project all perform standard
+    undirected message passing over edge_index regardless of this flag.
+    So this is not true directed link prediction; treat `directed` as a
+    negative-sampling option only, not a modeling capability.
+    """
 
     datasets = {
 

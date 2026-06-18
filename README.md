@@ -174,18 +174,36 @@ Link:
 python main.py link gat citeseer
 ```
 
-Link (directed negative sampling):
+Link (undirected, default):
+
+```bash
+python main.py link gat citeseer
+```
+
+Link (directed):
 
 ```bash
 python main.py link gat citeseer 32 0.01 0.5 5e-4 200 1
 ```
 
-Note: the `directed` flag only changes how negative edges are sampled
-during the train/val/test split (`RandomLinkSplit(is_undirected=...)`)
-and which NetworkX graph type the heuristic baselines build. The GNN
-encoders themselves (GCNConv/GATConv/SAGEConv/GINConv as used here)
-perform undirected message passing regardless of this flag, so this is
-not full directed link prediction — it should not be described as such.
+When `directed=1`:
+* `RandomLinkSplit` samples negative edges as directed (`is_undirected=False`).
+* The model switches to `models/directed_link.py:DirectedLinkEncoder`,
+  which wraps the chosen GNN (GCN/GAT/GraphSAGE/GIN, unchanged) and adds
+  two small linear heads producing a separate source embedding and
+  destination embedding per node.
+* Scoring is asymmetric: edge u -> v is scored with
+  `dot(src_head(z[u]), dst_head(z[v]))`, which is generally different
+  from the score for v -> u. This is what actually makes the prediction
+  direction-aware, since the underlying GCNConv/GATConv/SAGEConv/GINConv
+  layers still just do standard message passing over `edge_index` either
+  way — direction-awareness comes from the two-head wrapper and the
+  asymmetric decoder on top, not from the conv layers themselves.
+* The heuristic baselines also switch to `nx.DiGraph()` in this mode.
+
+When `directed=0` (default), the original single-embedding encoder and
+symmetric decoder are used unchanged, exactly as before this feature was
+added.
 
 Graph:
 

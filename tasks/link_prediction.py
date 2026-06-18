@@ -11,13 +11,20 @@ def load_link_dataset(
     directed=False
 ):
     """
-    NOTE on `directed`: this only controls RandomLinkSplit's negative
-    edge sampling strategy (is_undirected=not directed). It does NOT
-    make the GNN encoders themselves direction-aware -- GCNConv, GATConv,
-    SAGEConv, and GINConv as used in this project all perform standard
-    undirected message passing over edge_index regardless of this flag.
-    So this is not true directed link prediction; treat `directed` as a
-    negative-sampling option only, not a modeling capability.
+    `directed` controls two things together:
+      1. RandomLinkSplit's negative edge sampling strategy here
+         (is_undirected=not directed).
+      2. In main.py's link branch, directed=True switches the model to
+         models.directed_link.DirectedLinkEncoder, which learns separate
+         source/destination embeddings and scores edges asymmetrically
+         (see utils/train.py:decode_directed and
+         utils/evaluate.py:decode_directed). directed=False keeps using
+         the original single-embedding encoder with the symmetric
+         decode(), which cannot distinguish u->v from v->u.
+    The base GNN layers (GCNConv/GATConv/SAGEConv/GINConv) still perform
+    standard message passing over edge_index either way -- direction
+    awareness comes from the two-head wrapper and asymmetric decoder on
+    top, not from the conv layers themselves.
     """
 
     datasets = {

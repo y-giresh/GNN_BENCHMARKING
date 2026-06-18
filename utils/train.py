@@ -223,6 +223,42 @@ def decode(
     )
 
 
+def decode_directed(
+
+    z_src,
+
+    z_dst,
+
+    edge_index
+
+):
+    """
+    Asymmetric scoring for directed link prediction: scores edge u -> v
+    using the SOURCE embedding of u and the DESTINATION embedding of v.
+    Unlike decode() above, decode_directed(z_src, z_dst, [u, v]) and
+    decode_directed(z_src, z_dst, [v, u]) are generally different values,
+    since z_src and z_dst come from separate learned heads.
+    """
+
+    return (
+
+        z_src[
+            edge_index[0]
+        ]
+
+        *
+
+        z_dst[
+            edge_index[1]
+        ]
+
+    ).sum(
+
+        dim=1
+
+    )
+
+
 
 
 def train_link(
@@ -467,6 +503,237 @@ def train_link(
 
             )
 
+
+    if best_state is not None:
+
+        model.load_state_dict(
+
+            best_state
+
+        )
+
+        model.eval()
+
+
+
+
+def train_link_directed(
+
+    model,
+
+    train_data,
+
+    val_data,
+
+    optimizer,
+
+    epochs=200,
+
+    patience=20
+
+):
+    """
+    Directed counterpart of train_link(). `model` must be a
+    DirectedLinkEncoder (models/directed_link.py), whose forward() returns
+    a (z_src, z_dst) tuple rather than a single z. Scoring uses
+    decode_directed(), which is asymmetric in u/v, unlike decode().
+    """
+
+    best_auc = -1.0
+
+    wait = 0
+
+    best_state = None
+
+    for epoch in range(
+
+        epochs
+
+    ):
+
+        model.train()
+
+        optimizer.zero_grad()
+
+        z_src, z_dst = model(
+
+            train_data.x,
+
+            train_data.edge_index
+
+        )
+
+        pos = decode_directed(
+
+            z_src,
+
+            z_dst,
+
+            train_data.edge_label_index[
+
+                :,
+
+                train_data.edge_label == 1
+
+            ]
+
+        )
+
+        neg = decode_directed(
+
+            z_src,
+
+            z_dst,
+
+            train_data.edge_label_index[
+
+                :,
+
+                train_data.edge_label == 0
+
+            ]
+
+        )
+
+        loss = (
+
+            F.binary_cross_entropy_with_logits(
+
+                pos,
+
+                torch.ones_like(
+
+                    pos
+
+                )
+
+            )
+
+            +
+
+            F.binary_cross_entropy_with_logits(
+
+                neg,
+
+                torch.zeros_like(
+
+                    neg
+
+                )
+
+            )
+
+        )
+
+        loss.backward()
+
+        optimizer.step()
+
+        model.eval()
+
+        with torch.no_grad():
+
+            z_src_val, z_dst_val = model(
+
+                val_data.x,
+
+                val_data.edge_index
+
+            )
+
+            val_pred = decode_directed(
+
+                z_src_val,
+
+                z_dst_val,
+
+                val_data.edge_label_index
+
+            )
+
+            val_prob = (
+
+                torch.sigmoid(
+
+                    val_pred
+
+                )
+
+                .cpu()
+
+            )
+
+            val_true = (
+
+                val_data.edge_label
+
+                .cpu()
+
+            )
+
+            val_auc = (
+
+                roc_auc_score(
+
+                    val_true,
+
+                    val_prob
+
+                )
+
+            )
+
+        if val_auc > best_auc:
+
+            best_auc = val_auc
+
+            wait = 0
+
+            best_state = (
+
+                {
+
+                    k:
+
+                    v.cpu()
+
+                    for k, v
+
+                    in model.state_dict()
+
+                    .items()
+
+                }
+
+            )
+
+        else:
+
+            wait += 1
+
+        if wait >= patience:
+
+            print()
+
+            print(
+
+                f"Directed Link Early stopping at epoch {epoch}"
+
+            )
+
+            break
+
+        if epoch % 20 == 0:
+
+            print(
+
+                f"Epoch {epoch}"
+
+                f" | Loss {loss:.4f}"
+
+                f" | Val_AUC {val_auc:.4f}"
+
+            )
 
     if best_state is not None:
 

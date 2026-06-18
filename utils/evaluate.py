@@ -207,6 +207,42 @@ def decode(
     )
 
 
+def decode_directed(
+
+    z_src,
+
+    z_dst,
+
+    edge_index
+
+):
+    """
+    Asymmetric scoring for directed link prediction: scores edge u -> v
+    using the SOURCE embedding of u and the DESTINATION embedding of v.
+    Mirrors decode_directed() in utils/train.py -- kept separate per the
+    existing pattern in this file (decode()/evaluate_link() also have
+    their own copy rather than importing from train.py).
+    """
+
+    return (
+
+        z_src[
+            edge_index[0]
+        ]
+
+        *
+
+        z_dst[
+            edge_index[1]
+        ]
+
+    ).sum(
+
+        dim=1
+
+    )
+
+
 
 
 def evaluate_link(
@@ -381,6 +417,206 @@ def evaluate_link(
 
         )
 
+
+    return {
+
+        "AUC":
+
+        round(
+
+            auc,
+
+            4
+
+        ),
+
+        "Average_Precision":
+
+        round(
+
+            ap,
+
+            4
+
+        ),
+
+        "F1":
+
+        round(
+
+            f1,
+
+            4
+
+        ),
+
+        "Hits@10pct":
+
+        round(
+
+            hits,
+
+            4
+
+        )
+
+    }
+
+
+
+
+def evaluate_link_directed(
+
+    model,
+
+    test_data
+
+):
+    """
+    Directed counterpart of evaluate_link(). `model` must be a
+    DirectedLinkEncoder (models/directed_link.py), whose forward()
+    returns a (z_src, z_dst) tuple. Scoring uses decode_directed(),
+    which is asymmetric in u/v.
+
+    Same Hits@10pct definition as evaluate_link(): candidate test edges
+    ranked by score, top 10% taken, fraction of those that are true
+    positives.
+    """
+
+    model.eval()
+
+    with torch.no_grad():
+
+        z_src, z_dst = model(
+
+            test_data.x,
+
+            test_data.edge_index
+
+        )
+
+        out = decode_directed(
+
+            z_src,
+
+            z_dst,
+
+            test_data.edge_label_index
+
+        )
+
+        prob = (
+
+            torch.sigmoid(
+
+                out
+
+            )
+
+            .cpu()
+
+        )
+
+        pred = (
+
+            prob
+
+            >
+
+            0.5
+
+        )
+
+        y_true = (
+
+            test_data.edge_label
+
+            .cpu()
+
+        )
+
+        auc = (
+
+            roc_auc_score(
+
+                y_true,
+
+                prob
+
+            )
+
+        )
+
+        ap = (
+
+            average_precision_score(
+
+                y_true,
+
+                prob
+
+            )
+
+        )
+
+        f1 = (
+
+            f1_score(
+
+                y_true,
+
+                pred
+
+            )
+
+        )
+
+        # Hits@10pct: rank all candidate edges (positives + negatives) by
+        # predicted score, take the top 10% by score, and report the
+        # fraction of those top-ranked edges that are true positive edges.
+        k = max(
+
+            1,
+
+            int(
+
+                0.1
+
+                *
+
+                len(
+
+                    prob
+
+                )
+
+            )
+
+        )
+
+        top_k = torch.topk(
+
+            prob,
+
+            k
+
+        ).indices
+
+        hits = (
+
+            y_true[
+
+                top_k
+
+            ]
+
+            .float()
+
+            .mean()
+
+            .item()
+
+        )
 
     return {
 

@@ -171,49 +171,49 @@ echo LINK PREDICTION (CORA)
 echo ===================
 
 echo --- GCN ---
-python main.py link gcn cora 32 0.001 0.3 1e-4 200
-python main.py link gcn cora 32 0.001 0.3 5e-4 200
-python main.py link gcn cora 32 0.001 0.5 1e-4 200
-python main.py link gcn cora 32 0.001 0.5 5e-4 200
-python main.py link gcn cora 32 0.005 0.3 1e-4 200
-python main.py link gcn cora 32 0.005 0.3 5e-4 200
-python main.py link gcn cora 32 0.005 0.5 1e-4 200
-python main.py link gcn cora 32 0.005 0.5 5e-4 200
-python main.py link gcn cora 32 0.01 0.3 1e-4 200
-python main.py link gcn cora 32 0.01 0.3 5e-4 200
-python main.py link gcn cora 32 0.01 0.5 1e-4 200
-python main.py link gcn cora 32 0.01 0.5 5e-4 200
-python main.py link gcn cora 64 0.001 0.3 1e-4 200
-python main.py link gcn cora 64 0.001 0.3 5e-4 200
-python main.py link gcn cora 64 0.001 0.5 1e-4 200
-python main.py link gcn cora 64 0.001 0.5 5e-4 200
-python main.py link gcn cora 64 0.005 0.3 1e-4 200
-python main.py link gcn cora 64 0.005 0.3 5e-4 200
-python main.py link gcn cora 64 0.005 0.5 1e-4 200
-python main.py link gcn cora 64 0.005 0.5 5e-4 200
-python main.py link gcn cora 64 0.01 0.3 1e-4 200
-python main.py link gcn cora 64 0.01 0.3 5e-4 200
-python main.py link gcn cora 64 0.01 0.5 1e-4 200
-python main.py link gcn cora 64 0.01 0.5 5e-4 200
-python main.py link gcn cora 128 0.001 0.3 1e-4 200
-python main.py link gcn cora 128 0.001 0.3 5e-4 200
-python main.py link gcn cora 128 0.001 0.5 1e-4 200
-python main.py link gcn cora 128 0.001 0.5 5e-4 200
-python main.py link gcn cora 128 0.005 0.3 1e-4 200
-python main.py link gcn cora 128 0.005 0.3 5e-4 200
-python main.py link gcn cora 128 0.005 0.5 1e-4 200
-python main.py link gcn cora 128 0.005 0.5 5e-4 200
-python main.py link gcn cora 128 0.01 0.3 1e-4 200
-python main.py link gcn cora 128 0.01 0.3 5e-4 200
-python main.py link gcn cora 128 0.01 0.5 1e-4 200
-python main.py link gcn cora 128 0.01 0.5 5e-4 200
+python main.py link gcn cora 32 0.001 0.3 1e-4 200 1
+python main.py link gcn cora 32 0.001 0.3 5e-4 200 1
+python main.py link gcn cora 32 0.001 0.5 1e-4 200 1
+python main.py link gcn cora 32 0.001 0.5 5e-4 200 1
+python main.py link gcn cora 32 0.005 0.3 1e-4 200 1
+python main.py link gcn cora 32 0.005 0.3 5e-4 200 1
+python main.py link gcn cora 32 0.005 0.5 1e-4 200 1
+python main.py link gcn cora 32 0.005 0.5 5e-4 200 1
+python main.py link gcn cora 32 0.01 0.3 1e-4 200 1
+python main.py link gcn cora 32 0.01 0.3 5e-4 200 1
+python main.py link gcn cora 32 0.01 0.5 1e-4 200 1
+python main.py link gcn cora 32 0.01 0.5 5e-4 200 1
+python main.py link gcn cora 64 0.001 0.3 1e-4 200 1
+python main.py link gcn cora 64 0.001 0.3 5e-4 200 1
+python main.py link gcn cora 64 0.001 0.5 1e-4 200 1
+python main.py link gcn cora 64 0.001 0.5 5e-4 200 1
+python main.py link gcn cora 64 0.005 0.3 1e-4 200 1
+python main.py link gcn cora 64 0.005 0.3 5e-4 200 1
+python main.py link gcn cora 64 0.005 0.5 1e-4 200 1
+python main.py link gcn cora 64 0.005 0.5 5e-4 200 1
+python main.py link gcn cora 64 0.01 0.3 1e-4 200 1
+python main.py link gcn cora 64 0.01 0.3 5e-4 200 1 
+python main.py link gcn cora 64 0.01 0.5 1e-4 200 1
+python main.py link gcn cora 64 0.01 0.5 5e-4 200 1
+python main.py link gcn cora 128 0.001 0.3 1e-4 200 1
+python main.py link gcn cora 128 0.001 0.3 5e-4 200 1
+python main.py link gcn cora 128 0.001 0.5 1e-4 200 1
+python main.py link gcn cora 128 0.001 0.5 5e-4 200 1
+python main.py link gcn cora 128 0.005 0.3 1e-4 200 1
+python main.py link gcn cora 128 0.005 0.3 5e-4 200 1
+python main.py link gcn cora 128 0.005 0.5 1e-4 200 1
+python main.py link gcn cora 128 0.005 0.5 5e-4 200 1
+python main.py link gcn cora 128 0.01 0.3 1e-4 200 1
+python main.py link gcn cora 128 0.01 0.3 5e-4 200 1
+python main.py link gcn cora 128 0.01 0.5 1e-4 200 1
+python main.py link gcn cora 128 0.01 0.5 5e-4 200 1
 
 echo --- GAT ---
-python main.py link gat cora 32 0.001 0.3 1e-4 200
-python main.py link gat cora 32 0.001 0.3 5e-4 200
-python main.py link gat cora 32 0.001 0.5 1e-4 200
-python main.py link gat cora 32 0.001 0.5 5e-4 200
-python main.py link gat cora 32 0.005 0.3 1e-4 200
+python main.py link gat cora 32 0.001 0.3 1e-4 200 1
+python main.py link gat cora 32 0.001 0.3 5e-4 200 1
+python main.py link gat cora 32 0.001 0.5 1e-4 200 1
+python main.py link gat cora 32 0.001 0.5 5e-4 200 1
+python main.py link gat cora 32 0.005 0.3 1e-4 200 1
 python main.py link gat cora 32 0.005 0.3 5e-4 200
 python main.py link gat cora 32 0.005 0.5 1e-4 200
 python main.py link gat cora 32 0.005 0.5 5e-4 200
@@ -225,13 +225,13 @@ python main.py link gat cora 64 0.001 0.3 1e-4 200
 python main.py link gat cora 64 0.001 0.3 5e-4 200
 python main.py link gat cora 64 0.001 0.5 1e-4 200
 python main.py link gat cora 64 0.001 0.5 5e-4 200
-python main.py link gat cora 64 0.005 0.3 1e-4 200
+python main.py link gat cora 64 0.005 0.3 1e-4 200 1
 python main.py link gat cora 64 0.005 0.3 5e-4 200
 python main.py link gat cora 64 0.005 0.5 1e-4 200
 python main.py link gat cora 64 0.005 0.5 5e-4 200
-python main.py link gat cora 64 0.01 0.3 1e-4 200
+python main.py link gat cora 64 0.01 0.3 1e-4 200 1
 python main.py link gat cora 64 0.01 0.3 5e-4 200
-python main.py link gat cora 64 0.01 0.5 1e-4 200
+python main.py link gat cora 64 0.01 0.5 1e-4 200 1
 python main.py link gat cora 64 0.01 0.5 5e-4 200
 python main.py link gat cora 128 0.001 0.3 1e-4 200
 python main.py link gat cora 128 0.001 0.3 5e-4 200
@@ -240,7 +240,7 @@ python main.py link gat cora 128 0.001 0.5 5e-4 200
 python main.py link gat cora 128 0.005 0.3 1e-4 200
 python main.py link gat cora 128 0.005 0.3 5e-4 200
 python main.py link gat cora 128 0.005 0.5 1e-4 200
-python main.py link gat cora 128 0.005 0.5 5e-4 200
+python main.py link gat cora 128 0.005 0.5 5e-4 200 1
 python main.py link gat cora 128 0.01 0.3 1e-4 200
 python main.py link gat cora 128 0.01 0.3 5e-4 200
 python main.py link gat cora 128 0.01 0.5 1e-4 200
@@ -259,7 +259,7 @@ python main.py link graphsage cora 32 0.01 0.3 1e-4 200
 python main.py link graphsage cora 32 0.01 0.3 5e-4 200
 python main.py link graphsage cora 32 0.01 0.5 1e-4 200
 python main.py link graphsage cora 32 0.01 0.5 5e-4 200
-python main.py link graphsage cora 64 0.001 0.3 1e-4 200
+python main.py link graphsage cora 64 0.001 0.3 1e-4 200 1
 python main.py link graphsage cora 64 0.001 0.3 5e-4 200
 python main.py link graphsage cora 64 0.001 0.5 1e-4 200
 python main.py link graphsage cora 64 0.001 0.5 5e-4 200
@@ -271,14 +271,14 @@ python main.py link graphsage cora 64 0.01 0.3 1e-4 200
 python main.py link graphsage cora 64 0.01 0.3 5e-4 200
 python main.py link graphsage cora 64 0.01 0.5 1e-4 200
 python main.py link graphsage cora 64 0.01 0.5 5e-4 200
-python main.py link graphsage cora 128 0.001 0.3 1e-4 200
+python main.py link graphsage cora 128 0.001 0.3 1e-4 200 1
 python main.py link graphsage cora 128 0.001 0.3 5e-4 200
 python main.py link graphsage cora 128 0.001 0.5 1e-4 200
 python main.py link graphsage cora 128 0.001 0.5 5e-4 200
 python main.py link graphsage cora 128 0.005 0.3 1e-4 200
 python main.py link graphsage cora 128 0.005 0.3 5e-4 200
 python main.py link graphsage cora 128 0.005 0.5 1e-4 200
-python main.py link graphsage cora 128 0.005 0.5 5e-4 200
+python main.py link graphsage cora 128 0.005 0.5 5e-4 200 1
 python main.py link graphsage cora 128 0.01 0.3 1e-4 200
 python main.py link graphsage cora 128 0.01 0.3 5e-4 200
 python main.py link graphsage cora 128 0.01 0.5 1e-4 200
@@ -289,11 +289,11 @@ python main.py link gin cora 32 0.001 0.3 1e-4 200
 python main.py link gin cora 32 0.001 0.3 5e-4 200
 python main.py link gin cora 32 0.001 0.5 1e-4 200
 python main.py link gin cora 32 0.001 0.5 5e-4 200
-python main.py link gin cora 32 0.005 0.3 1e-4 200
+python main.py link gin cora 32 0.005 0.3 1e-4 200 1
 python main.py link gin cora 32 0.005 0.3 5e-4 200
 python main.py link gin cora 32 0.005 0.5 1e-4 200
 python main.py link gin cora 32 0.005 0.5 5e-4 200
-python main.py link gin cora 32 0.01 0.3 1e-4 200
+python main.py link gin cora 32 0.01 0.3 1e-4 200 1
 python main.py link gin cora 32 0.01 0.3 5e-4 200
 python main.py link gin cora 32 0.01 0.5 1e-4 200
 python main.py link gin cora 32 0.01 0.5 5e-4 200
@@ -308,19 +308,19 @@ python main.py link gin cora 64 0.005 0.5 5e-4 200
 python main.py link gin cora 64 0.01 0.3 1e-4 200
 python main.py link gin cora 64 0.01 0.3 5e-4 200
 python main.py link gin cora 64 0.01 0.5 1e-4 200
-python main.py link gin cora 64 0.01 0.5 5e-4 200
+python main.py link gin cora 64 0.01 0.5 5e-4 200 1
 python main.py link gin cora 128 0.001 0.3 1e-4 200
 python main.py link gin cora 128 0.001 0.3 5e-4 200
-python main.py link gin cora 128 0.001 0.5 1e-4 200
+python main.py link gin cora 128 0.001 0.5 1e-4 200 1
 python main.py link gin cora 128 0.001 0.5 5e-4 200
 python main.py link gin cora 128 0.005 0.3 1e-4 200
 python main.py link gin cora 128 0.005 0.3 5e-4 200
 python main.py link gin cora 128 0.005 0.5 1e-4 200
-python main.py link gin cora 128 0.005 0.5 5e-4 200
+python main.py link gin cora 128 0.005 0.5 5e-4 200 1
 python main.py link gin cora 128 0.01 0.3 1e-4 200
 python main.py link gin cora 128 0.01 0.3 5e-4 200
 python main.py link gin cora 128 0.01 0.5 1e-4 200
-python main.py link gin cora 128 0.01 0.5 5e-4 200
+python main.py link gin cora 128 0.01 0.5 5e-4 200 1
 
 
 echo ===================

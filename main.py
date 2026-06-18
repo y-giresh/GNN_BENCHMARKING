@@ -181,9 +181,9 @@ elif task == "link":
 
     from tasks import load_link_dataset
 
-    from utils.train import train_link
+    from utils.train import train_link, train_link_directed
 
-    from utils.evaluate import evaluate_link
+    from utils.evaluate import evaluate_link, evaluate_link_directed
 
 
     dataset, train_data, val_data, test_data = (
@@ -197,19 +197,37 @@ elif task == "link":
 
     start = time.time()
 
-    model = get_model(
+    if directed:
 
-        model_name,
+        from models.directed_link import DirectedLinkEncoder
 
-        dataset.num_features,
+        model = DirectedLinkEncoder(
 
-        hidden_dim,
+            model_name,
 
-        hidden_dim,
+            dataset.num_features,
 
-        dropout
+            hidden_dim,
 
-    )
+            dropout
+
+        )
+
+    else:
+
+        model = get_model(
+
+            model_name,
+
+            dataset.num_features,
+
+            hidden_dim,
+
+            hidden_dim,
+
+            dropout
+
+        )
 
 
     optimizer = torch.optim.Adam(
@@ -223,28 +241,55 @@ elif task == "link":
     )
 
 
-    train_link(
+    if directed:
 
-        model,
+        train_link_directed(
 
-        train_data,
+            model,
 
-        val_data,
+            train_data,
 
-        optimizer,
+            val_data,
 
-        epochs
+            optimizer,
 
-    )
+            epochs
+
+        )
 
 
-    acc = evaluate_link(
+        acc = evaluate_link_directed(
 
-        model,
+            model,
 
-        test_data
+            test_data
 
-    )
+        )
+
+    else:
+
+        train_link(
+
+            model,
+
+            train_data,
+
+            val_data,
+
+            optimizer,
+
+            epochs
+
+        )
+
+
+        acc = evaluate_link(
+
+            model,
+
+            test_data
+
+        )
 
 
     graph = nx.DiGraph() if directed else nx.Graph()

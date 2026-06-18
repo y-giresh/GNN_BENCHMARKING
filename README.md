@@ -227,16 +227,16 @@ best-model-per-dataset table from `results/comparison.txt` here, e.g.
 
 | Task  | Dataset  | Best Model | Metric            |
 |-------|----------|-----------|---------------------|
-| Node  | Cora     | TBD       | Accuracy = TBD       |
-| Node  | CiteSeer | TBD       | Accuracy = TBD       |
-| Node  | PubMed   | TBD       | Accuracy = TBD       |
-| Link  | Cora     | TBD       | AUC = TBD            |
-| Link  | CiteSeer | TBD       | AUC = TBD            |
-| Link  | PubMed   | TBD       | AUC = TBD            |
-| Graph | MUTAG    | TBD       | Accuracy_Mean = TBD  |
-| Graph | PROTEINS | TBD       | Accuracy_Mean = TBD  |
-| Graph | ENZYMES  | TBD       | Accuracy_Mean = TBD  |
-| Graph | NCI1     | TBD       | Accuracy_Mean = TBD  |
+| Node  | Cora     | GAT       | Accuracy = 0.7540       |
+| Node  | CiteSeer | GAT       | Accuracy = 0.6200       |
+| Node  | PubMed   | GAT       | Accuracy = 0.7360       |
+| Link  | Cora     | GCN       | AUC = 0.9457            |
+| Link  | CiteSeer | GAT       | AUC = 0.8674            |
+| Link  | PubMed   | GCN       | AUC = 0.9340            |
+| Graph | MUTAG    | GIN       | Accuracy_Mean = 0.8035  |
+| Graph | PROTEINS | GIN       | Accuracy_Mean = 0.6892  |
+| Graph | ENZYMES  | GraphSAGE       | Accuracy_Mean = 0.3200  |
+| Graph | NCI1     | GraphSAGE       | Accuracy_Mean = 0.6560  |
 
 Do not fill this in with guessed numbers; only copy values that came out
 of an actual run of `results/comparison.txt`.

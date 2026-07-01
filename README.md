@@ -245,9 +245,6 @@ The following are intentionally excluded from version control via
 * `results/*.xlsx`, `results/*.txt` (generated locally by running
   experiments; not source code)
 
-If any of these were previously committed, remove them from the repo
-history/tracking before the next push (e.g. `git rm -r --cached data
-results/*.xlsx __pycache__` followed by a commit).
 
 ---
 
